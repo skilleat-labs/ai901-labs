@@ -1,0 +1,69 @@
+site_name: AI-901 실습 랩
+site_description: Microsoft Foundry로 직접 만들어 보는 AI-901 4일 hands-on 랩
+site_url: https://skilleat-labs.github.io/ai901-labs/
+
+theme:
+  name: material
+  language: ko
+  palette:
+    - scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: 다크 모드로 전환
+    - scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: 라이트 모드로 전환
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.instant
+    - navigation.tracking
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.keys
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - 홈: index.md
+  - 시작하기: 00-setup.md
+  - 1일차 — 개념과 환경:
+    - Lab 00 — Azure 구독과 예산 알림: labs/lab00-subscription.md
+    - Lab 01 — Foundry 리소스와 프로젝트: labs/lab01-foundry-project.md
+    - Lab 02 — 키·Python 환경·첫 연결: labs/lab02-first-call.md
+  - 2일차 — 모델과 프롬프트:
+    - Lab 03 — 모델 배포 제대로 하기: labs/lab03-deploy-model.md
+    - Lab 04 — 첫 호출 확장과 토큰: labs/lab04-tokens.md
+    - Lab 05 — 대화를 기억하는 챗봇: labs/lab05-chat-memory.md
+    - Lab 06 — 매개변수 실험: labs/lab06-parameters.md
+    - Lab 07 — 시스템 메시지와 근거 기반 답변: labs/lab07-system-grounding.md
+  - 3일차 — 에이전트와 언어:
+    - Lab 08 — 포털에서 에이전트 만들기: labs/lab08-agent-portal.md
+    - Lab 09 — 코드에서 에이전트 호출: labs/lab09-agent-code.md
+    - Lab 10 — 텍스트 분석 두 가지 방법: labs/lab10-text-analysis.md
+    - Lab 11 — 음성 인식과 합성: labs/lab11-speech.md
+    - Lab 12 — Voice Live (강사 데모): labs/lab12-voice-live-demo.md
+  - 4일차 — 비전·추출과 시험:
+    - Lab 13 — 멀티모달 이미지 분석: labs/lab13-multimodal-image.md
+    - Lab 14 — 이미지 생성: labs/lab14-image-generation.md
+    - Lab 15 — Content Understanding 추출: labs/lab15-content-understanding.md
+    - Lab 16 — 리소스 전체 정리: labs/lab16-cleanup.md
