@@ -60,8 +60,20 @@
 
     | | 무엇 | 생김새 |
     |---|---|---|
-    | **엔드포인트** | 모델을 부르는 **주소** | `https://....openai.azure.com/...` |
+    | **엔드포인트** | 모델을 부르는 **주소** | `https://<리소스이름>.openai.azure.com/openai/v1/` |
     | **API 키** | 그 요청을 **인증**하는 수단 | 길고 무작위한 문자열 (Key 1 / Key 2) |
+
+!!! danger "★ 엔드포인트는 포털에서 복사한 그대로 쓰면 안 됩니다"
+    포털이 보여주는 주소는 `https://<리소스이름>.openai.azure.com/` 까지입니다.
+    여기에 **`openai/v1/` 경로를 반드시 붙여야** 합니다.
+
+    ```text
+    포털에서 본 것   https://ai901-01-nrk.openai.azure.com/
+    실제로 쓸 것     https://ai901-01-nrk.openai.azure.com/openai/v1/
+                                                      └──────┘ 이게 없으면 404
+    ```
+
+    **이것이 이 랩에서 가장 많이 나는 오류입니다.** 4절에서 직접 조립합니다.
 
 !!! danger "키는 비밀번호입니다"
     - 화면 공유 중이라면 키가 보이지 않게 가리세요
@@ -102,10 +114,15 @@
 (.venv) C:\Users\hong\ai901>
 ```
 
-이제 패키지를 설치합니다.
+이제 패키지를 설치합니다. 같은 폴더에 **`requirements.txt`** 를 만들고 아래를 넣으세요.
+
+```ini title="requirements.txt"
+openai==2.46.0
+python-dotenv==1.2.4
+```
 
 ```bash
-pip install openai python-dotenv
+pip install -r requirements.txt
 ```
 
 설치 확인:
@@ -114,7 +131,18 @@ pip install openai python-dotenv
 pip list
 ```
 
-목록에 **`openai`** 와 **`python-dotenv`** 가 보이면 됩니다.
+목록에 **`openai` 2.46.0** 과 **`python-dotenv`** 가 보이면 됩니다.
+
+!!! warning "★ 버전을 고정하는 이유 — 꼭 `==` 로 설치하세요"
+    `pip install openai` 로 설치하면 **그날의 최신 버전**이 들어옵니다.
+    SDK가 올라가면서 메서드 이름이나 인자가 바뀌는 일이 실제로 있어서,
+    **어제까지 되던 코드가 오늘 안 되는** 상황이 생깁니다.
+
+    교실에서는 이게 더 심각합니다. 설치 시점이 조금씩 달라서
+    **32명의 환경이 서로 달라지면** 오류를 같이 잡을 수 없습니다.
+
+    `openai 2.46.0` 과 `azure-identity 1.25.3` 은 Microsoft 공식 문서가
+    **함께 테스트했다고 밝힌 조합**입니다. 그래서 이 버전으로 맞춥니다.
 
 !!! question "가상 환경이 왜 필요한가요"
     프로젝트마다 쓰는 패키지 버전이 다르기 때문입니다.
@@ -127,12 +155,40 @@ pip list
 `ai901` 폴더 안에 **`.env`** 라는 이름의 파일을 만듭니다. (확장자 없이 점으로 시작합니다)
 
 ```ini
-AZURE_OPENAI_ENDPOINT=여기에_엔드포인트_붙여넣기
+AZURE_OPENAI_ENDPOINT=https://<리소스이름>.openai.azure.com/openai/v1/
 API_KEY=여기에_키_붙여넣기
 MODEL_DEPLOYMENT_NAME=gpt-4o-mini
 ```
 
-!!! warning "자주 틀리는 세 가지"
+### 엔드포인트 조립하기
+
+!!! danger "붙여넣는 게 아니라 **조립**합니다"
+    `<리소스이름>` 자리에 **Lab 01에서 정한 Foundry 리소스 이름**을 넣습니다.
+    환경 기록표에 적어 둔 그 이름입니다.
+
+    | 조각 | 값 | 어디서 |
+    |---|---|---|
+    | `https://` | 고정 | — |
+    | `<리소스이름>` | 예: `ai901-01-nrk` | Lab 01에서 내가 정한 이름 |
+    | `.openai.azure.com` | 고정 | — |
+    | **`/openai/v1/`** | **고정 — 빠뜨리면 404** | — |
+
+    완성 예시:
+
+    ```ini
+    AZURE_OPENAI_ENDPOINT=https://ai901-01-nrk.openai.azure.com/openai/v1/
+    ```
+
+    **맨 끝의 `/` 까지 넣으세요.** 완성한 값을 환경 기록표에 적어 두세요.
+
+!!! question "포털에서 복사한 주소를 쓰면 안 되나요"
+    포털은 리소스 종류에 따라 `.openai.azure.com` 또는 `.cognitiveservices.azure.com`
+    주소를 보여주고, **경로 없이 끝납니다.** 그대로 쓰면 404가 납니다.
+
+    그래서 이 과정에서는 **리소스 이름으로 직접 조립**합니다. 헷갈릴 일이 없습니다.
+
+!!! warning "자주 틀리는 네 가지"
+    - **`/openai/v1/` 를 빠뜨림** ← 가장 흔합니다
     - **따옴표를 넣지 마세요.** `API_KEY="abc"` ❌ → `API_KEY=abc` ✅
     - **등호 앞뒤에 공백을 넣지 마세요.** `API_KEY = abc` ❌
     - **줄 끝 공백**도 오류가 됩니다. 붙여넣고 끝에 커서를 둬서 확인하세요
@@ -188,8 +244,10 @@ python verify.py
 
 !!! success "여기까지 됐으면 1일차 완료입니다"
     - [ ] 터미널 프롬프트에 `(.venv)` 가 보인다
-    - [ ] `pip list` 에 `openai` 와 `python-dotenv` 가 있다
+    - [ ] `pip list` 의 `openai` 가 **2.46.0** 이다
     - [ ] `.env` 에 엔드포인트 · 키 · 배포 이름 **세 줄**이 들어 있다
+    - [ ] 엔드포인트가 **`/openai/v1/` 로 끝난다** ← 404의 1순위 원인
+    - [ ] 엔드포인트를 **환경 기록표에 적었다**
     - [ ] `python verify.py` 를 실행했다
     - [ ] **터미널에 모델의 인사말이 한 줄 출력됐다** ← 이게 성공 기준입니다
 
@@ -209,16 +267,34 @@ python verify.py
     2. 포털에서 키를 **다시 복사**해서 붙여넣기
     3. Key 1 대신 Key 2로 바꿔 시도
 
-??? failure "404 Not Found — 모델 배포를 못 찾음"
-    **가장 흔한 오류입니다.** 배포 이름이 틀린 것입니다.
+??? failure "404 Not Found — 주소나 배포 이름을 못 찾음"
+    **가장 흔한 오류입니다.** 원인이 세 가지인데, **반드시 이 순서로** 확인하세요.
+
+    **① 주소 경로** — 이게 제일 흔합니다
+
+    `.env` 의 `AZURE_OPENAI_ENDPOINT` 가 **`/openai/v1/` 로 끝나는지** 보세요.
+
+    ```ini
+    https://ai901-01-nrk.openai.azure.com/            ❌ 404
+    https://ai901-01-nrk.openai.azure.com/openai/v1   ❌ 끝 슬래시 없음
+    https://ai901-01-nrk.openai.azure.com/openai/v1/  ✅
+    ```
+
+    **② 배포 이름**
 
     1. Foundry 포털 → **배포** 목록에서 이름을 **그대로 복사**
     2. `.env` 의 `MODEL_DEPLOYMENT_NAME` 과 **글자 하나까지** 같은지 확인
-    3. 모델 이름(`gpt-4o-mini`)이 아니라 **배포 이름**을 넣었는지 확인
+    3. 모델 이름이 아니라 **배포 이름**을 넣었는지 확인
+       (배포할 때 이름을 바꿨다면 그 이름입니다. 기본값을 그대로 뒀다면 둘이 같습니다)
 
-    !!! note "헷갈리기 쉬운 지점"
-        배포할 때 이름을 바꿨다면 그 이름을 써야 합니다.
-        기본값 그대로 뒀다면 모델 이름과 배포 이름이 같아서 구분이 안 됩니다.
+    **③ 모델이 그 기능을 지원하는지**
+
+    배포한 모델이 `responses` 를 지원하지 않으면 404 또는 매개변수 오류가 납니다.
+    이 과정은 `gpt-4o-mini` 기준입니다. 다른 모델을 배포했다면 손을 드세요.
+
+    !!! tip "어디까지 왔는지 확인하는 법"
+        `401` 이 난다면 **주소는 맞은 것**입니다 (서버에 닿아서 인증까지 갔다는 뜻).
+        `404` 는 아직 주소나 배포를 못 찾은 단계입니다.
 
 ??? failure "429 Too Many Requests — 속도 제한"
     같은 교실에서 동시에 요청이 몰렸을 수 있습니다.
@@ -232,10 +308,24 @@ python verify.py
 
     1. 터미널 프롬프트 앞에 `(.venv)` 가 있는지 확인
     2. 없으면 3번 단계의 활성화 명령을 다시 실행
-    3. 그다음 `pip install openai python-dotenv` 재실행
+    3. 그다음 `pip install -r requirements.txt` 재실행
 
     !!! tip "터미널을 새로 열면 가상 환경이 꺼집니다"
         매번 활성화해 줘야 합니다. 4일 내내 이 오류가 제일 많이 납니다.
+
+??? failure "엔드포인트 주소에 cognitiveservices.azure.com 이 들어 있습니다"
+    포털이 그 주소를 보여줬을 수 있지만, **이 과정에서는 쓰지 않습니다.**
+
+    4절의 조립 규칙대로 **`https://<리소스이름>.openai.azure.com/openai/v1/`** 로 바꾸세요.
+    `<리소스이름>` 은 Lab 01에서 정한 Foundry 리소스 이름입니다.
+
+??? failure "openai 버전이 2.46.0 이 아닙니다"
+    ```bash
+    pip install -r requirements.txt --force-reinstall
+    ```
+
+    `requirements.txt` 에 `openai==2.46.0` 이 **`==` 로** 적혀 있는지 확인하세요.
+    버전이 다르면 `responses.create` 의 동작이 달라질 수 있습니다.
 
 ??? failure "엔드포인트나 키가 None 이라고 나옵니다"
     **`.env` 를 못 읽고 있습니다.**

@@ -2,9 +2,16 @@
 
 !!! info "이 실습에서 하는 것"
     **글자를 소리로**(TTS), **소리를 글자로**(STT) 바꿉니다.
-    Azure Speech는 월 50만 자가 무료라 비용 부담이 없습니다.
+    Azure Speech는 표준(S0) 가격에 **월 50만 자 무료 한도**가 포함돼 비용 부담이 거의 없습니다.
 
-**선행** [Lab 10](lab10-text-analysis.md) 완료 · **예상 시간** 25분 · **비용** 0원 (무료 한도 내)
+**선행** [Lab 10](lab10-text-analysis.md) 완료 · **예상 시간** 25분 · **비용** 거의 0원 (무료 한도 내)
+
+!!! note "“무료 한도”는 구독 단위로 공유됩니다"
+    월 50만 뉴럴 문자는 **구독 전체에 주어지는 한도**입니다. 1인당이 아닙니다.
+    이 실습은 1인당 **한두 문장**만 합성하므로 32명이 해도 한도 안에서 끝납니다.
+
+    다만 긴 글을 반복해서 합성하면 한도를 넘어 과금될 수 있습니다.
+    **짧은 문장으로** 확인하고 넘어가세요.
 
 ---
 
@@ -34,8 +41,12 @@ SPEECH_REGION=리소스의_지역   # 예: eastus2
 
 패키지를 설치합니다.
 
+```ini title="requirements.txt 에 추가"
+azure-cognitiveservices-speech==1.53.0
+```
+
 ```bash
-pip install azure-cognitiveservices-speech
+pip install -r requirements.txt
 ```
 
 ---
@@ -150,7 +161,7 @@ python stt.py
 ??? failure "Speech 키를 어디서 받는지 모르겠습니다"
     Foundry 프로젝트의 **도구·지식**에 Speech 연결이 없다면,
     Azure 포털에서 **Speech 서비스** 리소스를 따로 만들어도 됩니다
-    (`rg-ai901` 안에, 같은 지역으로). 키와 지역은 리소스 **개요**에 있습니다.
+    (**`rg-ai901-<내 번호>` 안에**, 같은 지역으로). 키와 지역은 리소스 **개요**에 있습니다.
 
     헷갈리면 손을 드세요.
 
@@ -183,9 +194,10 @@ python stt.py
 
 ??? failure "ModuleNotFoundError: azure.cognitiveservices.speech"
     ```bash
-    pip install azure-cognitiveservices-speech
+    pip install -r requirements.txt
     ```
-    `(.venv)` 확인 먼저 하세요.
+    `(.venv)` 확인 먼저 하세요. `requirements.txt` 에
+    `azure-cognitiveservices-speech==1.53.0` 줄이 있는지도 보세요.
 
 ---
 

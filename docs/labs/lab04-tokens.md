@@ -133,8 +133,10 @@ python call_model.py
     그래도 안 되면 `print(response)` 로 전체 응답을 찍어 구조를 확인하세요.
 
 ??? failure "429 Too Many Requests"
-    교실에서 동시에 몰렸습니다. 30초 뒤 재시도하거나,
-    [Lab 03](lab03-deploy-model.md) 3절에서 TPM을 올리세요.
+    교실에서 동시에 몰렸습니다. **30초 뒤 재시도**하세요.
+
+    SDK 가 이미 두 번 자동 재시도한 뒤에 난 오류입니다.
+    반복되면 [Lab 03](lab03-deploy-model.md) 3절에서 **TPM** 을 올립니다.
 
 ---
 

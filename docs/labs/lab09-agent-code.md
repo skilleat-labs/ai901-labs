@@ -14,13 +14,37 @@
 
 | | 모델 호출 (Lab 04) | 에이전트 호출 (지금) |
 |---|---|---|
-| 인증 | **API 키** | **ID (자격 증명)** |
+| 이 과정에서 쓴 방식 | **API 키** | **ID (자격 증명)** |
 | 코드 | `api_key=...` | `DefaultAzureCredential()` |
-| 이유 | 모델만 부르면 됨 | 프로젝트 전체 권한이 필요 |
+| 무엇에 연결하나 | 리소스의 모델 | **프로젝트** |
 
 !!! note "★ 시험에 그대로 나옵니다"
     "에이전트를 코드로 호출할 때 사용하는 인증 방식은?" → **DefaultAzureCredential (ID 인증)**
     `api_key=` 를 넣는 선택지가 오답으로 섞여 나옵니다.
+
+!!! warning "다만 — “모델은 키, 에이전트는 ID” 는 아닙니다"
+    오해하기 쉬운 지점이라 정확히 짚고 갑니다.
+
+    **모델 호출도 Microsoft Entra ID 로 할 수 있습니다.** 공식 문서는 오히려
+    **프로덕션에서는 키보다 Entra ID 를 권장**합니다. 모델 호출에 ID 를 쓰면 이런 모양입니다.
+
+    ```python
+    from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+
+    token_provider = get_bearer_token_provider(
+        DefaultAzureCredential(), "https://ai.azure.com/.default")
+    client = OpenAI(base_url=endpoint, api_key=token_provider)
+    ```
+
+    | | 키 인증 | Entra ID 인증 |
+    |---|---|---|
+    | 모델 호출 | 가능 | **가능 (권장)** |
+    | 에이전트 호출 | — | **이 방식만** |
+
+    **정확한 구분은 이렇습니다.**
+    모델 호출은 **둘 다** 되고, 에이전트(프로젝트)는 **ID 인증이 필요**합니다.
+
+    우리가 Lab 02~07에서 키를 쓴 건 **처음 배울 때 단계가 적어서**입니다.
 
 ### 설치 확인
 
@@ -48,7 +72,7 @@ az --version
 az login
 ```
 
-브라우저가 열립니다. **Lab 00에서 쓴 학교 계정**으로 로그인하세요.
+브라우저가 열립니다. **배부받은 계정**(포털에서 쓰는 그 계정)으로 로그인하세요.
 
 ```bash
 az account show
@@ -63,12 +87,26 @@ az account show
 
 ## 2. 패키지 설치 (3분)
 
+Lab 02에서 만든 `requirements.txt` 에 **두 줄을 추가**합니다.
+
+```ini title="requirements.txt"
+openai==2.46.0
+python-dotenv==1.2.4
+azure-identity==1.25.3
+azure-ai-projects==2.9.0
+```
+
 ```bash
-pip install azure-identity azure-ai-projects
+pip install -r requirements.txt
 ```
 
 !!! tip "`(.venv)` 가 보이는지 먼저 확인"
     가상 환경이 꺼져 있으면 엉뚱한 곳에 설치됩니다.
+
+!!! warning "버전을 고정한 이유"
+    `azure-ai-projects` 는 아직 변화가 빠른 패키지입니다.
+    버전이 올라가면 `agents.get()` 이나 `extra_body` 의 형태가 달라질 수 있어서
+    **교실 전체를 같은 버전으로** 맞춥니다.
 
 ---
 
@@ -182,15 +220,26 @@ python call_agent.py
 
 ??? failure "ModuleNotFoundError: azure.ai.projects"
     ```bash
-    pip install azure-identity azure-ai-projects
+    pip install -r requirements.txt
     ```
     `(.venv)` 가 켜진 상태에서 실행했는지 확인하세요.
+    `requirements.txt` 에 `azure-ai-projects==2.9.0` 줄을 추가했는지도 보세요.
 
 ??? failure "권한 오류 (Forbidden / 403)"
-    로그인한 계정이 프로젝트에 접근 권한이 없습니다.
+    **키 인증과 ID 인증의 차이가 여기서 드러납니다.**
 
-    - 포털에서 그 프로젝트가 **보이는 계정**으로 `az login` 했는지 확인
-    - 강사 구독을 쓰는 경우라면 권한 부여가 필요합니다. 손을 드세요
+    Lab 02~07 은 키로 호출해서 역할을 거치지 않았습니다.
+    지금은 ID 인증이라 **데이터 평면 역할**이 있어야 합니다.
+
+    | 역할 | 담당 | Lab 09 에 필요? |
+    |---|---|---|
+    | `Contributor` | 제어 평면 (리소스 생성) | 부족함 |
+    | **`Cognitive Services User`** | **데이터 평면 (추론·에이전트)** | **필요** |
+
+    1. 포털에서 그 프로젝트가 **보이는 계정**으로 `az login` 했는지 확인
+    2. `az account show` 의 계정이 포털 계정과 같은지 확인
+    3. 그래도 403 이면 **역할이 누락된 것입니다. 손을 드세요** —
+       강사가 `Cognitive Services User` 를 부여하면 1~2분 뒤 됩니다
 
 ??? failure "extra_body 에서 오류가 납니다"
     SDK 버전 차이일 수 있습니다. 오류 메시지를 보고 손을 드세요.
