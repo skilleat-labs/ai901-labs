@@ -134,12 +134,12 @@
 
 ## 🔧 안 될 때
 
-??? failure "\"리소스 만들기\"에서 Foundry가 검색되지 않습니다"
+??? failure "“리소스 만들기”에서 Foundry가 검색되지 않습니다"
     - 검색어를 **`Foundry`** 또는 **`AI Foundry`** 로 바꿔 보세요
     - 그래도 없으면 구독이 **Azure for Students** 로 선택돼 있는지 확인하세요
     - 포털 언어가 영어면 `Create a resource` → `Foundry`
 
-??? failure "이름이 \"이미 사용 중\"이라고 나옵니다"
+??? failure "이름이 “이미 사용 중”이라고 나옵니다"
     Foundry 리소스 이름은 **전 세계에서 유일**해야 합니다.
     `ai901-hong-0310` 처럼 뒤에 숫자를 붙이세요.
 
