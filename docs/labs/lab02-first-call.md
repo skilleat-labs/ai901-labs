@@ -23,9 +23,10 @@
 
 4. **배포 유형을 `Global Standard` 로 선택합니다.**
 
-    !!! danger "⚠ 여기서 `Standard` 를 고르면 배포가 실패합니다"
-        이 구독에는 지역형 `Standard` 할당량이 **0** 입니다.
-        반드시 **`Global Standard`** 를 선택하세요. 왜 그런지는 내일 Lab 03 에서 다룹니다.
+    !!! warning "⚠ `Standard` 가 아니라 `Global Standard` 입니다"
+        둘은 처리 위치와 **할당량 규모**가 다릅니다.
+        이 구독에서 `Global Standard` 는 지역형 `Standard` 보다 **10배 넉넉**합니다.
+        32명이 나눠 쓰려면 `Global Standard` 를 써야 합니다. 이유는 내일 Lab 03 에서 다룹니다.
 
 5. 배포 이름을 확인합니다. 기본값 `gpt-4o-mini` 를 **그대로 쓰세요.**
 
