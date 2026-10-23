@@ -108,33 +108,46 @@
 
 ```python
 # extract.py — 구조
-# 1. 클라이언트 생성
-client = ContentUnderstandingClient(endpoint, credential)
+from azure.ai.contentunderstanding import ContentUnderstandingClient
+from azure.identity import DefaultAzureCredential
 
-# 2. 분석 작업 제출
-operation = client.begin_analyze(
-    analyzer_id="receipt-analyzer",
-    document=file_bytes)
+# 1. 클라이언트 생성
+client = ContentUnderstandingClient(endpoint, DefaultAzureCredential())
+
+# 2. 분석 작업 제출 — 로컬 파일은 _binary 쪽
+with open("receipt.png", "rb") as f:
+    poller = client.begin_analyze_binary(
+        analyzer_id="receipt-analyzer",
+        binary_input=f.read())
 
 # 3. 완료까지 대기 (폴링)
-result = operation.result()
+result = poller.result()
 
-# 4. 구조화된 결과 사용
-print(result.fields["총금액"])
+# 4. 구조화된 결과 사용 (필드 접근 방식은 SDK 버전에 따라 다릅니다)
 ```
+
+!!! note "입력이 URL이면 메서드가 다릅니다"
+    | 입력 | 메서드 |
+    |---|---|
+    | 로컬 파일 | `begin_analyze_binary(analyzer_id=..., binary_input=...)` |
+    | 공개 URL | `begin_analyze(analyzer_id=..., inputs=[AnalysisInput(url=...)])` |
+
+    패키지는 `azure-ai-contentunderstanding` 이고,
+    호출하려면 리소스에 **`Cognitive Services User`** 역할이 있어야 합니다.
 
 ### ★ `begin_` 과 폴링이 핵심입니다
 
 | 단계 | 의미 |
 |---|---|
-| `begin_analyze(...)` | **작업을 제출**만 합니다. 결과가 바로 안 옵니다 |
-| `operation.result()` | **끝날 때까지 기다립니다** (폴링) |
+| `begin_...` | **작업을 제출**만 합니다. 결과가 바로 안 옵니다 |
+| `poller.result()` | **끝날 때까지 기다립니다** (SDK가 폴링을 대신해 줍니다) |
 
 !!! note "왜 비동기인가요"
     문서 분석은 시간이 걸립니다. Lab 14의 비디오 생성과 같은 이유입니다.
     **오래 걸리는 작업은 제출 → 폴링** 패턴을 씁니다.
 
-    시험에 "문서 분석 결과를 어떻게 받는가?" → **작업 제출 후 폴링**으로 나옵니다.
+    시험에 "문서 분석 결과를 어떻게 받는가?" → **작업을 제출하고 완료를 기다린다(폴링)** 로 나옵니다.
+    REST 는 작업 URL 을 직접 폴링하고, SDK 는 poller 가 대신해 줍니다.
 
 ---
 
@@ -144,7 +157,7 @@ print(result.fields["총금액"])
     - [ ] 분석기를 만들고 **필드 3개**를 정의했다
     - [ ] 영수증에서 **필드별 값**이 추출됐다
     - [ ] OCR과 CU의 차이를 한 문장으로 말할 수 있다
-    - [ ] `begin_analyze` → 폴링 구조를 안다
+    - [ ] `begin_...` → `poller.result()` 구조를 안다
 
 ---
 

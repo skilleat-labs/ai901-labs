@@ -50,22 +50,33 @@ client = OpenAI(
     base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
     api_key=os.getenv("API_KEY"))
 
+# 구조 — 실제 호출 형태는 SDK·모델 버전에 따라 다릅니다.
+# 강사 화면의 코드를 따라 치세요.
 response = client.responses.create(
     model="여기에_이미지모델_배포이름",
     input="눈 내리는 한옥 마을의 저녁 풍경. 따뜻한 창문 불빛.")
 
-print(response)
+print(response)   # 응답 구조를 먼저 확인
 ```
 
 ```bash
 python generate_image.py
 ```
 
-!!! note "★ 시험 포인트 — 생성도 Responses API 입니다"
+!!! note "★ 시험 포인트 — 배포한 모델에 프롬프트를 보낸다"
     "프로그래밍 방식으로 이미지를 생성하려면?"
-    → **배포된 이미지 모델에 Responses API로 텍스트 프롬프트를 전송**합니다.
+    → **배포된 이미지 모델에 텍스트 프롬프트를 전송**합니다.
 
     "플레이그라운드에 업로드한다" 같은 선택지는 오답입니다.
+
+    호출 경로는 두 가지가 있습니다.
+
+    | 경로 | 언제 |
+    |---|---|
+    | **Responses API** | 대화 흐름 안에서 이미지 생성 도구로 부를 때 |
+    | **Images API** | 이미지 생성만 하는 전용 엔드포인트 |
+
+    둘 다 "배포한 모델에 프롬프트를 보낸다"는 점은 같습니다.
 
 ### 결과 받기
 
