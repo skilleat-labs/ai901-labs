@@ -63,17 +63,18 @@
     | **엔드포인트** | 모델을 부르는 **주소** | `https://<리소스이름>.openai.azure.com/openai/v1/` |
     | **API 키** | 그 요청을 **인증**하는 수단 | 길고 무작위한 문자열 (Key 1 / Key 2) |
 
-!!! danger "★ 엔드포인트는 포털에서 복사한 그대로 쓰면 안 됩니다"
-    포털이 보여주는 주소는 `https://<리소스이름>.openai.azure.com/` 까지입니다.
-    여기에 **`openai/v1/` 경로를 반드시 붙여야** 합니다.
+!!! danger "★ 엔드포인트는 두 개가 있습니다 — 헷갈리면 연결이 안 됩니다"
+    Foundry 프로젝트 홈 화면에 주소가 **두 개** 나란히 보입니다.
 
-    ```text
-    포털에서 본 것   https://ai901-01-nrk.openai.azure.com/
-    실제로 쓸 것     https://ai901-01-nrk.openai.azure.com/openai/v1/
-                                                      └──────┘ 이게 없으면 404
-    ```
+    | 화면의 이름 | 생김새 | 쓰는 곳 |
+    |---|---|---|
+    | 프로젝트 엔드포인트 | `...services.ai.azure.com/api/projects/...` | **에이전트** (Lab 09) |
+    | **Azure OpenAI 엔드포인트** | `...openai.azure.com/openai/v1` | **모델 — 오늘 쓸 것** |
 
-    **이것이 이 랩에서 가장 많이 나는 오류입니다.** 4절에서 직접 조립합니다.
+    우리가 쓸 건 **오른쪽, `openai.azure.com` 으로 된 것**입니다.
+    `services.ai.azure.com` 을 넣으면 연결되지 않습니다.
+
+    그리고 주소 끝의 **`/openai/v1`** 이 반드시 있어야 합니다. 없으면 404 입니다.
 
 !!! danger "키는 비밀번호입니다"
     - 화면 공유 중이라면 키가 보이지 않게 가리세요
@@ -160,35 +161,44 @@ API_KEY=여기에_키_붙여넣기
 MODEL_DEPLOYMENT_NAME=gpt-4o-mini
 ```
 
-### 엔드포인트 조립하기
+### 엔드포인트 가져오기
 
-!!! danger "붙여넣는 게 아니라 **조립**합니다"
-    `<리소스이름>` 자리에 **Lab 01에서 정한 Foundry 리소스 이름**을 넣습니다.
-    환경 기록표에 적어 둔 그 이름입니다.
+1. [ai.azure.com](https://ai.azure.com) → 내 프로젝트 **홈** 화면
+2. 가운데 가로로 긴 칸에서 **`Azure OpenAI 엔드포인트`** 를 찾습니다
+3. 오른쪽 **복사 아이콘**을 눌러 복사합니다
 
-    | 조각 | 값 | 어디서 |
-    |---|---|---|
-    | `https://` | 고정 | — |
-    | `<리소스이름>` | 예: `ai901-01-nrk` | Lab 01에서 내가 정한 이름 |
-    | `.openai.azure.com` | 고정 | — |
-    | **`/openai/v1/`** | **고정 — 빠뜨리면 404** | — |
+```text
+https://ai901-01-nrkim.openai.azure.com/openai/v1
+                                        └────────┘ 이 경로가 있어야 합니다
+```
 
-    완성 예시:
+!!! warning "복사한 뒤 끝을 한 번 보세요 — `/` 를 붙입니다"
+    포털은 끝에 슬래시 없이 `/openai/v1` 까지만 줍니다.
+    `.env` 에는 **끝에 `/` 를 붙여서** 넣으세요.
 
     ```ini
-    AZURE_OPENAI_ENDPOINT=https://ai901-01-nrk.openai.azure.com/openai/v1/
+    AZURE_OPENAI_ENDPOINT=https://ai901-01-nrkim.openai.azure.com/openai/v1/
     ```
 
-    **맨 끝의 `/` 까지 넣으세요.** 완성한 값을 환경 기록표에 적어 두세요.
+    완성한 값을 **환경 기록표에 적어 두세요.**
 
-!!! question "포털에서 복사한 주소를 쓰면 안 되나요"
-    포털은 리소스 종류에 따라 `.openai.azure.com` 또는 `.cognitiveservices.azure.com`
-    주소를 보여주고, **경로 없이 끝납니다.** 그대로 쓰면 404가 납니다.
+!!! question "왼쪽의 프로젝트 엔드포인트를 넣으면 안 되나요"
+    안 됩니다. 그건 **에이전트를 부를 때** 쓰는 주소라서 Lab 09에서 따로 씁니다.
+    `services.ai.azure.com` 이 보이면 잘못 가져온 것입니다.
 
-    그래서 이 과정에서는 **리소스 이름으로 직접 조립**합니다. 헷갈릴 일이 없습니다.
+!!! question "화면에 `/openai/v1` 이 안 보이고 주소가 짧게 끝납니다"
+    Azure 포털의 **키 및 엔드포인트** 화면은 호스트까지만 보여주기도 합니다.
+    그럴 땐 직접 이어 붙이세요.
+
+    ```text
+    https://<리소스이름>.openai.azure.com  +  /openai/v1/
+    ```
+
+    `<리소스이름>` 은 Lab 01에서 정한 이름입니다. `.cognitiveservices.azure.com`
+    주소가 보이더라도, 이 과정에서는 **`.openai.azure.com`** 쪽을 쓰세요.
 
 !!! warning "자주 틀리는 네 가지"
-    - **`/openai/v1/` 를 빠뜨림** ← 가장 흔합니다
+    - **프로젝트 엔드포인트를 넣음** · **`/openai/v1/` 를 빠뜨림** ← 가장 흔합니다
     - **따옴표를 넣지 마세요.** `API_KEY="abc"` ❌ → `API_KEY=abc` ✅
     - **등호 앞뒤에 공백을 넣지 마세요.** `API_KEY = abc` ❌
     - **줄 끝 공백**도 오류가 됩니다. 붙여넣고 끝에 커서를 둬서 확인하세요
@@ -313,10 +323,16 @@ python verify.py
     !!! tip "터미널을 새로 열면 가상 환경이 꺼집니다"
         매번 활성화해 줘야 합니다. 4일 내내 이 오류가 제일 많이 납니다.
 
-??? failure "엔드포인트 주소에 cognitiveservices.azure.com 이 들어 있습니다"
-    포털이 그 주소를 보여줬을 수 있지만, **이 과정에서는 쓰지 않습니다.**
+??? failure "엔드포인트에 services.ai.azure.com 이 들어 있습니다"
+    **프로젝트 엔드포인트를 잘못 가져온 것입니다.** 가장 흔한 혼동입니다.
 
-    4절의 조립 규칙대로 **`https://<리소스이름>.openai.azure.com/openai/v1/`** 로 바꾸세요.
+    프로젝트 홈 화면에서 **`Azure OpenAI 엔드포인트`** 칸(오른쪽)을 다시 복사하세요.
+    `openai.azure.com` 이 들어 있어야 맞습니다.
+
+??? failure "엔드포인트 주소에 cognitiveservices.azure.com 이 들어 있습니다"
+    Azure 포털의 키 및 엔드포인트 화면이 그 주소를 보여줬을 수 있습니다.
+
+    이 과정에서는 **`https://<리소스이름>.openai.azure.com/openai/v1/`** 를 쓰세요.
     `<리소스이름>` 은 Lab 01에서 정한 Foundry 리소스 이름입니다.
 
 ??? failure "openai 버전이 2.46.0 이 아닙니다"
