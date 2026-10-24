@@ -9,8 +9,8 @@
 |---|---|---|
 | 1 | **Azure 로그인 계정** | 1일차에 **강사가 배부**합니다 (가입 절차 없음) |
 | 2 | **노트북** (Windows · macOS 무관) | 관리자 권한으로 설치 가능해야 합니다 |
-| 3 | **Python 3.10 이상** | 아래 확인 |
-| 4 | **VS Code** (권장) | [code.visualstudio.com](https://code.visualstudio.com) |
+| 3 | **Python 3.10 이상** | [수업 전 설치](install.md) ← 미리 해두세요 |
+| 4 | **VS Code** (권장) | [수업 전 설치](install.md) |
 | 5 | **크롬 또는 엣지** | 포털이 가장 안정적으로 돕니다 |
 
 !!! danger "신용카드는 필요 없습니다"
@@ -46,26 +46,25 @@
 
 ## Python 확인
 
-터미널(Windows는 PowerShell)에서:
+터미널(Windows 는 PowerShell)에서 한 줄만 해보세요.
 
-```bash
-python --version
-```
+=== "Windows"
+    ```powershell
+    python --version
+    ```
 
-`Python 3.10.x` 이상이 나오면 됩니다.
+=== "macOS"
+    ```bash
+    python3 --version
+    ```
 
-??? failure "명령을 찾을 수 없다고 나옵니다"
-    === "Windows"
-        `python3` 또는 `py --version` 으로도 시도해 보세요.
-        그래도 없으면 [python.org](https://www.python.org/downloads/) 에서 설치합니다.
-        설치 화면에서 **Add Python to PATH** 를 반드시 체크하세요.
+**`Python 3.10` 이상**이 나오면 준비 끝입니다.
 
-    === "macOS"
-        ```bash
-        python3 --version
-        ```
-        없으면 [python.org](https://www.python.org/downloads/) 에서 설치하거나
-        `brew install python` 을 씁니다.
+!!! warning "안 나오면 — [수업 전 설치](install.md) 를 보세요"
+    설치 방법이 화면 그림까지 단계별로 정리돼 있습니다. **10분**이면 됩니다.
+
+    교실에서 하면 오래 걸리니 **되도록 수업 전에** 해두세요.
+    못 하셨어도 괜찮습니다 — 1일차 오전에 같이 확인하고 도와드립니다.
 
 ## 4일 동안의 흐름
 

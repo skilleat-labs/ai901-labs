@@ -45,6 +45,7 @@ markdown_extensions:
 
 nav:
   - 홈: index.md
+  - 수업 전 설치: install.md
   - 시작하기: 00-setup.md
   - 1일차 — 개념과 환경:
     - Lab 00 — Azure 구독과 예산 알림: labs/lab00-subscription.md

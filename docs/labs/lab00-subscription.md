@@ -156,15 +156,17 @@ Lab 01부터 리소스를 만들 때 고를 리전입니다. **수강생 전원�
 ??? failure "“명령을 찾을 수 없습니다” / 버전이 3.10 미만입니다"
     **지금 손을 드세요.** 설치는 쉽지만 10~20분 걸립니다.
 
+    설치 절차는 **[수업 전 설치](../install.md)** 에 화면 그림까지 정리돼 있습니다.
+    그 페이지를 열어서 따라 하시면 됩니다.
+
+    가장 많이 걸리는 두 지점만 미리 알려드립니다.
+
     === "Windows"
-        1. `py --version` 으로도 한 번 시도해 보세요
-        2. 없으면 [python.org/downloads](https://www.python.org/downloads/) 에서 설치
-        3. 설치 화면의 **「Add Python to PATH」를 반드시 체크**하세요 ← 안 하면 또 안 됩니다
-        4. 설치 뒤 **터미널을 닫고 새로 여세요**
+        - 설치 첫 화면의 **「Add python.exe to PATH」 체크** ← 기본값이 꺼져 있습니다
+        - 설치 뒤 **터미널을 닫고 새로 여세요**
 
     === "macOS"
-        1. [python.org/downloads](https://www.python.org/downloads/) 에서 설치하거나
-        2. `brew install python`
+        - `python` 이 아니라 **`python3`** 입니다
 
     !!! tip "설치가 오래 걸리면 점심시간에 이어서"
         Lab 01 은 포털에서만 하므로 Python 없이도 진행됩니다.
