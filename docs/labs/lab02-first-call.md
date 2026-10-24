@@ -246,7 +246,7 @@ MODEL_DEPLOYMENT_NAME=gpt-5.4-mini
 3. 오른쪽 **복사 아이콘**을 눌러 복사합니다
 
 ```text
-https://ai901-01-nrkim.openai.azure.com/openai/v1
+https://ai901-01-nrk.openai.azure.com/openai/v1
                                         └────────┘ 이 경로가 있어야 합니다
 ```
 
@@ -255,7 +255,7 @@ https://ai901-01-nrkim.openai.azure.com/openai/v1
     `.env` 에는 **끝에 `/` 를 붙여서** 넣으세요.
 
     ```ini
-    AZURE_OPENAI_ENDPOINT=https://ai901-01-nrkim.openai.azure.com/openai/v1/
+    AZURE_OPENAI_ENDPOINT=https://ai901-01-nrk.openai.azure.com/openai/v1/
     ```
 
     완성한 값을 **환경 기록표에 적어 두세요.**
@@ -466,5 +466,5 @@ ai901/
 지금 쓴 세 줄짜리 코드가 4일 내내 계속 자랍니다.
 
 !!! success "수고하셨습니다"
-    오늘 한 일 — 구독을 만들고, 예산 알림을 걸고, Foundry 리소스와 프로젝트를 만들고,
+    오늘 한 일 — 실습 환경을 확인하고, Foundry 리소스와 프로젝트를 만들고,
     모델을 배포하고, **내 코드로 AI를 불러서 답을 받았습니다.**

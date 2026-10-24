@@ -48,7 +48,7 @@ nav:
   - 수업 전 설치: install.md
   - 시작하기: 00-setup.md
   - 1일차 — 개념과 환경:
-    - Lab 00 — Azure 구독과 예산 알림: labs/lab00-subscription.md
+    - Lab 00 — 내 실습 환경 확인: labs/lab00-subscription.md
     - Lab 01 — Foundry 리소스와 프로젝트: labs/lab01-foundry-project.md
     - Lab 02 — 키·Python 환경·첫 연결: labs/lab02-first-call.md
   - 2일차 — 모델과 프롬프트:
