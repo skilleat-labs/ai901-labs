@@ -36,7 +36,7 @@
 
 ```ini
 SPEECH_KEY=여기에_Speech_키
-SPEECH_REGION=리소스의_지역   # 예: eastus2
+SPEECH_REGION=리소스의_지역   # 예: eastus
 ```
 
 패키지를 설치합니다.
