@@ -30,7 +30,7 @@
     | 리전 | `____________` | 번호에 따라 다름 (Lab 00) |
     | Foundry 리소스 이름 | `ai901-__-___` | Lab 01 |
     | 프로젝트 이름 | `proj-ai901` | Lab 01 |
-    | 모델 배포 이름 | `gpt-4o-mini` | Lab 02 |
+    | 모델 배포 이름 | `gpt-5.4-mini` | Lab 02 |
     | 엔드포인트 | `https://<리소스이름>.openai.azure.com/openai/v1/` | Lab 02 |
 
 !!! info "리전은 번호에 따라 두 갈래입니다"

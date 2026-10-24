@@ -157,7 +157,7 @@ response = client.responses.create(
 
 ??? failure "이미지를 인식하지 못한다고 합니다"
     배포한 모델이 **멀티모달**인지 확인하세요.
-    `gpt-4o-mini` 는 이미지를 봅니다. 일부 텍스트 전용 모델은 못 봅니다.
+    `gpt-5.4-mini` 는 이미지를 봅니다. 일부 텍스트 전용 모델은 못 봅니다.
 
 ??? failure "FileNotFoundError: sample.png"
     - 이미지가 **스크립트와 같은 폴더**에 있는지 확인
