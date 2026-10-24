@@ -1,0 +1,1796 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Microsoft Foundry로 직접 만들어 보는 AI-901 4일 hands-on 랩">
+      
+      
+      
+        <link rel="canonical" href="https://skilleat-labs.github.io/ai901-labs/labs/lab09-agent-code/">
+      
+      
+        <link rel="prev" href="../lab08-agent-portal/">
+      
+      
+        <link rel="next" href="../lab10-text-analysis/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 09 — 코드에서 에이전트 호출 - AI-901 실습 랩</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-09" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="AI-901 실습 랩" class="md-header__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-901 실습 랩
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 09 — 코드에서 에이전트 호출
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-901 실습 랩" class="md-nav__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-901 실습 랩
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수업 전 설치
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1일차 — 개념과 환경
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1일차 — 개념과 환경
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab00-subscription/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 00 — Azure 구독과 예산 알림
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab01-foundry-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 01 — Foundry 리소스와 프로젝트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab02-first-call/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 02 — 키·Python 환경·첫 연결
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2일차 — 모델과 프롬프트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2일차 — 모델과 프롬프트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab03-deploy-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 03 — 모델 배포 제대로 하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 — 첫 호출 확장과 토큰
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab05-chat-memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 05 — 대화를 기억하는 챗봇
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 — 매개변수 실험
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab07-system-grounding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 — 시스템 메시지와 근거 기반 답변
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3일차 — 에이전트와 언어
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3일차 — 에이전트와 언어
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-agent-portal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 — 포털에서 에이전트 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09 — 코드에서 에이전트 호출
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09 — 코드에서 에이전트 호출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-azure-cli-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Azure CLI 로그인 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Azure CLI 로그인 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 키를 안 쓰나
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설치 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        로그인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 패키지 설치 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 프로젝트 엔드포인트 확인 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-call_agentpy-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. call_agent.py (13분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. call_agent.py (13분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        줄별로 하는 일
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 모델 호출과 나란히 보기 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab10-text-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 10 — 텍스트 분석 두 가지 방법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab11-speech/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 11 — 음성 인식과 합성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab12-voice-live-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 12 — Voice Live (강사 데모)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4일차 — 비전·추출과 시험
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4일차 — 비전·추출과 시험
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab13-multimodal-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13 — 멀티모달 이미지 분석
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab14-image-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 14 — 이미지 생성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab15-content-understanding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15 — Content Understanding 추출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab16-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 16 — 리소스 전체 정리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-azure-cli-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Azure CLI 로그인 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Azure CLI 로그인 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        왜 키를 안 쓰나
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설치 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        로그인
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 패키지 설치 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 프로젝트 엔드포인트 확인 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-call_agentpy-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. call_agent.py (13분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. call_agent.py (13분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        줄별로 하는 일
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 모델 호출과 나란히 보기 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-09">Lab 09 — 코드에서 에이전트 호출하기</h1>
+<div class="admonition info">
+<p class="admonition-title">이 실습에서 하는 것</p>
+<p>포털에서 만든 <code>hr-agent</code> 를 <strong>내 코드에서</strong> 부릅니다.
+여기서 인증 방식이 바뀝니다 — <strong>키가 아니라 ID 인증</strong>입니다.</p>
+</div>
+<p><strong>선행</strong> <a href="../lab08-agent-portal/">Lab 08</a> 완료 · <strong>예상 시간</strong> 36분 · <strong>비용</strong> 약 $0.05 미만</p>
+<hr />
+<h2 id="1-azure-cli-10">1. Azure CLI 로그인 (10분)</h2>
+<h3 id="_1">왜 키를 안 쓰나</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>모델 호출 (Lab 04)</th>
+<th>에이전트 호출 (지금)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>이 과정에서 쓴 방식</td>
+<td><strong>API 키</strong></td>
+<td><strong>ID (자격 증명)</strong></td>
+</tr>
+<tr>
+<td>코드</td>
+<td><code>api_key=...</code></td>
+<td><code>DefaultAzureCredential()</code></td>
+</tr>
+<tr>
+<td>무엇에 연결하나</td>
+<td>리소스의 모델</td>
+<td><strong>프로젝트</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">★ 시험에 그대로 나옵니다</p>
+<p>"에이전트를 코드로 호출할 때 사용하는 인증 방식은?" → <strong>DefaultAzureCredential (ID 인증)</strong>
+<code>api_key=</code> 를 넣는 선택지가 오답으로 섞여 나옵니다.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">다만 — “모델은 키, 에이전트는 ID” 는 아닙니다</p>
+<p>오해하기 쉬운 지점이라 정확히 짚고 갑니다.</p>
+<p><strong>모델 호출도 Microsoft Entra ID 로 할 수 있습니다.</strong> 공식 문서는 오히려
+<strong>프로덕션에서는 키보다 Entra ID 를 권장</strong>합니다. 모델 호출에 ID 를 쓰면 이런 모양입니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.identity</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultAzureCredential</span><span class="p">,</span> <span class="n">get_bearer_token_provider</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">token_provider</span> <span class="o">=</span> <span class="n">get_bearer_token_provider</span><span class="p">(</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">DefaultAzureCredential</span><span class="p">(),</span> <span class="s2">"https://ai.azure.com/.default"</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">token_provider</span><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>키 인증</th>
+<th>Entra ID 인증</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>모델 호출</td>
+<td>가능</td>
+<td><strong>가능 (권장)</strong></td>
+</tr>
+<tr>
+<td>에이전트 호출</td>
+<td>—</td>
+<td><strong>이 방식만</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>정확한 구분은 이렇습니다.</strong>
+모델 호출은 <strong>둘 다</strong> 되고, 에이전트(프로젝트)는 <strong>ID 인증이 필요</strong>합니다.</p>
+<p>우리가 Lab 02~07에서 키를 쓴 건 <strong>처음 배울 때 단계가 적어서</strong>입니다.</p>
+</div>
+<h3 id="_2">설치 확인</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>az<span class="w"> </span>--version
+</code></pre></div>
+<details class="failure">
+<summary>명령을 찾을 수 없다면 — 지금 설치</summary>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows</label><label for="__tabbed_1_2">macOS</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">winget</span> <span class="n">install</span> <span class="n">-e</span> <span class="p">-</span><span class="n">-id</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">AzureCLI</span>
+</code></pre></div>
+설치 후 <strong>터미널을 닫고 새로 여세요.</strong></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>brew<span class="w"> </span>install<span class="w"> </span>azure-cli
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>설치가 오래 걸리면 손을 드세요. 옆 사람 화면으로 먼저 따라오셔도 됩니다.</p>
+</details>
+<h3 id="_3">로그인</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>az<span class="w"> </span>login
+</code></pre></div>
+<p>브라우저가 열립니다. <strong>배부받은 계정</strong>(포털에서 쓰는 그 계정)으로 로그인하세요.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>az<span class="w"> </span>account<span class="w"> </span>show
+</code></pre></div>
+<p>구독 정보가 나오면 성공입니다.</p>
+<div class="admonition warning">
+<p class="admonition-title">다른 계정으로 로그인하면 에이전트를 못 찾습니다</p>
+<p><code>az account show</code> 의 <code>user</code> 가 포털에서 쓰는 계정과 같은지 확인하세요.</p>
+</div>
+<hr />
+<h2 id="2-3">2. 패키지 설치 (3분)</h2>
+<p>Lab 02에서 만든 <code>requirements.txt</code> 에 <strong>두 줄을 추가</strong>합니다.</p>
+<div class="highlight"><span class="filename">requirements.txt</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="na">openai</span><span class="o">=</span><span class="s">=2.46.0</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="na">python-dotenv</span><span class="o">=</span><span class="s">=1.2.4</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="na">azure-identity</span><span class="o">=</span><span class="s">=1.25.3</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="na">azure-ai-projects</span><span class="o">=</span><span class="s">=2.9.0</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title"><code>(.venv)</code> 가 보이는지 먼저 확인</p>
+<p>가상 환경이 꺼져 있으면 엉뚱한 곳에 설치됩니다.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">버전을 고정한 이유</p>
+<p><code>azure-ai-projects</code> 는 아직 변화가 빠른 패키지입니다.
+버전이 올라가면 <code>agents.get()</code> 이나 <code>extra_body</code> 의 형태가 달라질 수 있어서
+<strong>교실 전체를 같은 버전으로</strong> 맞춥니다.</p>
+</div>
+<hr />
+<h2 id="3-5">3. 프로젝트 엔드포인트 확인 (5분)</h2>
+<div class="admonition danger">
+<p class="admonition-title">★ 지금까지 쓰던 엔드포인트와 다릅니다</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>어디서 쓰나</th>
+<th>생김새</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>리소스 엔드포인트</strong></td>
+<td>모델 호출 (Lab 04)</td>
+<td><code>...openai.azure.com/...</code></td>
+</tr>
+<tr>
+<td><strong>프로젝트 엔드포인트</strong></td>
+<td><strong>에이전트 호출 (지금)</strong></td>
+<td>프로젝트 개요에 별도 표시</td>
+</tr>
+</tbody>
+</table>
+<p>둘을 바꿔 넣으면 연결이 안 됩니다. <strong>시험에도 나오는 구분입니다.</strong></p>
+</div>
+<ol>
+<li><a href="https://ai.azure.com">ai.azure.com</a> → 내 프로젝트 → <strong>개요</strong></li>
+<li><strong>프로젝트 엔드포인트</strong>를 복사합니다</li>
+<li><code>.env</code> 에 <strong>한 줄 추가</strong>합니다</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="na">PROJECT_ENDPOINT</span><span class="o">=</span><span class="s">여기에_프로젝트_엔드포인트_붙여넣기</span>
+</code></pre></div>
+<hr />
+<h2 id="4-call_agentpy-13">4. <code>call_agent.py</code> (13분)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.identity</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultAzureCredential</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.projects</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIProjectClient</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">load_dotenv</span><span class="p">()</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">project_client</span> <span class="o">=</span> <span class="n">AIProjectClient</span><span class="p">(</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">endpoint</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"PROJECT_ENDPOINT"</span><span class="p">),</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="n">credential</span><span class="o">=</span><span class="n">DefaultAzureCredential</span><span class="p">())</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">project_client</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"hr-agent"</span><span class="p">)</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="n">openai_client</span> <span class="o">=</span> <span class="n">project_client</span><span class="o">.</span><span class="n">get_openai_client</span><span class="p">()</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="n">response</span> <span class="o">=</span> <span class="n">openai_client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="nb">input</span><span class="o">=</span><span class="p">[{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"휴가 신청 어떻게 하나요?"</span><span class="p">}],</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    <span class="n">extra_body</span><span class="o">=</span><span class="p">{</span><span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>                          <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"agent_reference"</span><span class="p">}})</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">output_text</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>call_agent.py
+</code></pre></div>
+<h3 id="_4">줄별로 하는 일</h3>
+<table>
+<thead>
+<tr>
+<th>줄</th>
+<th>하는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DefaultAzureCredential()</code></td>
+<td><code>az login</code> 한 신원을 <strong>자동으로 찾아</strong> 씁니다</td>
+</tr>
+<tr>
+<td><code>AIProjectClient(...)</code></td>
+<td><strong>프로젝트</strong>에 연결합니다 (모델이 아니라)</td>
+</tr>
+<tr>
+<td><code>agents.get("hr-agent")</code></td>
+<td>포털에서 만든 에이전트를 <strong>가져옵니다</strong></td>
+</tr>
+<tr>
+<td><code>get_openai_client()</code></td>
+<td>프로젝트 인증을 <strong>물려받은</strong> OpenAI 클라이언트</td>
+</tr>
+<tr>
+<td><code>extra_body={"agent": ...}</code></td>
+<td>"이 요청은 <strong>이 에이전트가</strong> 처리해라"</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition question">
+<p class="admonition-title">왜 <code>OpenAI(...)</code> 를 새로 안 만드나요</p>
+<p><code>get_openai_client()</code> 는 프로젝트의 인증을 그대로 물려받습니다.
+새로 만들면 키가 또 필요해집니다. <strong>★ 시험 함정 지점입니다.</strong></p>
+</div>
+<hr />
+<h2 id="5-5">5. 모델 호출과 나란히 보기 (5분)</h2>
+<p><code>call_model.py</code>(Lab 04)와 <code>call_agent.py</code>를 양쪽에 띄워 놓고 비교하세요.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>모델 호출</th>
+<th>에이전트 호출</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>클라이언트</td>
+<td><code>OpenAI(base_url, api_key)</code></td>
+<td><code>AIProjectClient(endpoint, credential)</code></td>
+</tr>
+<tr>
+<td>엔드포인트</td>
+<td>리소스</td>
+<td><strong>프로젝트</strong></td>
+</tr>
+<tr>
+<td>인증</td>
+<td>API 키</td>
+<td><strong>DefaultAzureCredential</strong></td>
+</tr>
+<tr>
+<td>지침</td>
+<td>코드의 <code>SYSTEM</code></td>
+<td><strong>포털에 저장됨</strong></td>
+</tr>
+<tr>
+<td>지식</td>
+<td>프롬프트에 붙임</td>
+<td><strong>업로드한 파일</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">★ 시험 요령 — 다른 줄만 외우세요</p>
+<p>두 코드는 대부분 같습니다. <strong>다른 네 줄</strong>이 곧 출제 지점입니다.
+<code>DefaultAzureCredential</code> · <code>AIProjectClient</code> · <code>get_openai_client</code> · <code>agent_reference</code></p>
+</div>
+<hr />
+<h2 id="6">6. ✅ 체크포인트</h2>
+<div class="admonition success">
+<p class="admonition-title">여기까지 됐으면 통과입니다</p>
+<ul>
+<li>[ ] <code>az account show</code> 가 <strong>포털과 같은 계정</strong>을 보여준다</li>
+<li>[ ] <code>.env</code> 에 <code>PROJECT_ENDPOINT</code> 가 추가되어 있다</li>
+<li>[ ] <code>call_agent.py</code> 가 <strong>근거 조항과 함께</strong> 답한다</li>
+<li>[ ] 모델 호출과 에이전트 호출의 <strong>차이 네 가지</strong>를 말할 수 있다</li>
+</ul>
+</div>
+<hr />
+<h2 id="_5">🔧 안 될 때</h2>
+<details class="failure">
+<summary>DefaultAzureCredential 인증 실패</summary>
+<p>가장 흔합니다. 순서대로 확인하세요.</p>
+<ol>
+<li><code>az login</code> 을 <strong>했는지</strong></li>
+<li><code>az account show</code> 의 계정이 <strong>포털 계정과 같은지</strong></li>
+<li>여러 계정에 로그인돼 있다면: <code>az account set --subscription "&lt;구독ID&gt;"</code></li>
+<li>터미널을 <strong>새로 열고</strong> 다시 실행</li>
+</ol>
+</details>
+<details class="failure">
+<summary>에이전트를 찾을 수 없습니다 (hr-agent)</summary>
+<ul>
+<li>포털에서 에이전트 이름이 <strong>정확히 <code>hr-agent</code></strong> 인지 확인 (대소문자·공백)</li>
+<li><code>PROJECT_ENDPOINT</code> 가 <strong>프로젝트</strong> 엔드포인트인지 확인 (리소스 것 아님)</li>
+<li>에이전트가 <strong>저장</strong>되었는지 확인</li>
+</ul>
+</details>
+<details class="failure">
+<summary>ModuleNotFoundError: azure.ai.projects</summary>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</code></pre></div>
+<code>(.venv)</code> 가 켜진 상태에서 실행했는지 확인하세요.
+<code>requirements.txt</code> 에 <code>azure-ai-projects==2.9.0</code> 줄을 추가했는지도 보세요.</p>
+</details>
+<details class="failure">
+<summary>권한 오류 (Forbidden / 403)</summary>
+<p><strong>키 인증과 ID 인증의 차이가 여기서 드러납니다.</strong></p>
+<p>Lab 02~07 은 키로 호출해서 역할을 거치지 않았습니다.
+지금은 ID 인증이라 <strong>데이터 평면 역할</strong>이 있어야 합니다.</p>
+<table>
+<thead>
+<tr>
+<th>역할</th>
+<th>담당</th>
+<th>Lab 09 에 필요?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Contributor</code></td>
+<td>제어 평면 (리소스 생성)</td>
+<td>부족함</td>
+</tr>
+<tr>
+<td><strong><code>Cognitive Services User</code></strong></td>
+<td><strong>데이터 평면 (추론·에이전트)</strong></td>
+<td><strong>필요</strong></td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>포털에서 그 프로젝트가 <strong>보이는 계정</strong>으로 <code>az login</code> 했는지 확인</li>
+<li><code>az account show</code> 의 계정이 포털 계정과 같은지 확인</li>
+<li>그래도 403 이면 <strong>역할이 누락된 것입니다. 손을 드세요</strong> —
+   강사가 <code>Cognitive Services User</code> 를 부여하면 1~2분 뒤 됩니다</li>
+</ol>
+</details>
+<details class="failure">
+<summary>extra_body 에서 오류가 납니다</summary>
+<p>SDK 버전 차이일 수 있습니다. 오류 메시지를 보고 손을 드세요.
+급하면 포털 플레이그라운드로 대체하고 넘어갑니다 — 개념은 동일합니다.</p>
+</details>
+<details class="failure">
+<summary>az login 에서 브라우저가 안 열립니다</summary>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>az<span class="w"> </span>login<span class="w"> </span>--use-device-code
+</code></pre></div>
+화면에 나온 코드를 브라우저에 입력하는 방식입니다.</p>
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.instant", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

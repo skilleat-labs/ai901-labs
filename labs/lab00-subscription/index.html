@@ -1,0 +1,1868 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Microsoft Foundry로 직접 만들어 보는 AI-901 4일 hands-on 랩">
+      
+      
+      
+        <link rel="canonical" href="https://skilleat-labs.github.io/ai901-labs/labs/lab00-subscription/">
+      
+      
+        <link rel="prev" href="../../00-setup/">
+      
+      
+        <link rel="next" href="../lab01-foundry-project/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 00 — Azure 구독과 예산 알림 - AI-901 실습 랩</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-00" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="AI-901 실습 랩" class="md-header__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-901 실습 랩
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 00 — Azure 구독과 예산 알림
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-901 실습 랩" class="md-nav__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-901 실습 랩
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수업 전 설치
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1일차 — 개념과 환경
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1일차 — 개념과 환경
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 00 — Azure 구독과 예산 알림
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 00 — Azure 구독과 예산 알림
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 이 과정의 계정 방식 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 로그인 (10분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 내 자리 확인하기 (7분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 내 자리 확인하기 (7분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ① 구독이 보이는가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ② 내 리소스 그룹이 보이는가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-east-us-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ③ 리전 확인 — 전원 East US 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 내 환경 기록표 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-python-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Python 설치 확인 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 권한의 경계 확인하기 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 비용은 어떻게 보나 (선택 · 3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 각자 구독으로 진행하는 경우
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab01-foundry-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 01 — Foundry 리소스와 프로젝트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab02-first-call/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 02 — 키·Python 환경·첫 연결
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2일차 — 모델과 프롬프트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2일차 — 모델과 프롬프트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab03-deploy-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 03 — 모델 배포 제대로 하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 — 첫 호출 확장과 토큰
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab05-chat-memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 05 — 대화를 기억하는 챗봇
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 — 매개변수 실험
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab07-system-grounding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 — 시스템 메시지와 근거 기반 답변
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3일차 — 에이전트와 언어
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3일차 — 에이전트와 언어
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-agent-portal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 — 포털에서 에이전트 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab09-agent-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09 — 코드에서 에이전트 호출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab10-text-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 10 — 텍스트 분석 두 가지 방법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab11-speech/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 11 — 음성 인식과 합성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab12-voice-live-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 12 — Voice Live (강사 데모)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4일차 — 비전·추출과 시험
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4일차 — 비전·추출과 시험
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab13-multimodal-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13 — 멀티모달 이미지 분석
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab14-image-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 14 — 이미지 생성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab15-content-understanding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15 — Content Understanding 추출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab16-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 16 — 리소스 전체 정리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 이 과정의 계정 방식 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 로그인 (10분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 내 자리 확인하기 (7분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 내 자리 확인하기 (7분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ① 구독이 보이는가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ② 내 리소스 그룹이 보이는가
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-east-us-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ③ 리전 확인 — 전원 East US 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 내 환경 기록표 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-python-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Python 설치 확인 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 권한의 경계 확인하기 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 비용은 어떻게 보나 (선택 · 3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 각자 구독으로 진행하는 경우
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-00">Lab 00 — 내 실습 환경 확인하기</h1>
+<div class="admonition info">
+<p class="admonition-title">이 실습에서 하는 것</p>
+<p>강사가 배부한 계정으로 로그인해서, <strong>내가 4일 동안 쓸 자리</strong>를 확인합니다.
+구독·리소스 그룹·리전을 <strong>기록해 두는 것</strong>이 목표입니다. 뒤 랩에서 계속 씁니다.</p>
+</div>
+<p><strong>선행</strong> 없음 · <strong>예상 시간</strong> 33분 · <strong>비용</strong> 0원</p>
+<hr />
+<h2 id="0-3">0. 이 과정의 계정 방식 (3분)</h2>
+<div class="admonition note">
+<p class="admonition-title">구독은 강사 것, 작업 공간은 내 것입니다</p>
+<p>여러분은 <strong>강사의 교육용 구독 안에 있는 내 전용 리소스 그룹</strong>에서 작업합니다.
+가입 절차도, 신용카드도, 크레딧 관리도 없습니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>강사의 교육용 구독
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├─ rg-ai901-01   ← 1번 수강생의 자리 (여기 안에서만 작업)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├─ rg-ai901-02   ← 2번 수강생의 자리
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└─ ...
+</code></pre></div>
+</div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>강사가 미리 만들어 둔 것</th>
+<th>내가 수업 중에 만드는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구독</td>
+<td>✅</td>
+<td>—</td>
+</tr>
+<tr>
+<td>예산 알림</td>
+<td>✅</td>
+<td>—</td>
+</tr>
+<tr>
+<td>내 계정 <code>ai901-&lt;번호&gt;</code></td>
+<td>✅</td>
+<td>—</td>
+</tr>
+<tr>
+<td>내 리소스 그룹 <code>rg-ai901-&lt;번호&gt;</code></td>
+<td>✅</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Foundry 리소스·프로젝트</td>
+<td>—</td>
+<td>✅ Lab 01</td>
+</tr>
+<tr>
+<td>모델 배포</td>
+<td>—</td>
+<td>✅ Lab 02</td>
+</tr>
+<tr>
+<td>에이전트</td>
+<td>—</td>
+<td>✅ Lab 08</td>
+</tr>
+</tbody>
+</table>
+<p><strong>리소스 그룹까지는 받아서 시작하고, 그 안의 모든 것은 직접 만듭니다.</strong>
+리소스를 만드는 절차 자체가 시험 범위라서 그렇습니다.</p>
+<div class="admonition danger">
+<p class="admonition-title">신용카드를 요구하는 화면이 나오면 멈추세요</p>
+<p>이 과정에서는 <strong>어떤 화면에서도 카드 번호를 넣지 않습니다.</strong>
+카드를 요구하는 화면이 나왔다면 잘못된 가입 흐름으로 들어간 것입니다. <strong>강사를 부르세요.</strong></p>
+</div>
+<hr />
+<h2 id="1-10">1. 로그인 (10분)</h2>
+<p>배부받은 종이(또는 메시지)에 이렇게 적혀 있습니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>번호        01
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>계정        ai901-01@&lt;테넌트도메인&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>초기 비밀번호  &lt;배부된 값&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>리소스 그룹   rg-ai901-01
+</code></pre></div>
+<ol>
+<li>
+<p>브라우저에서 <a href="https://portal.azure.com">portal.azure.com</a> 에 접속합니다.</p>
+<div class="admonition tip">
+<p class="admonition-title">이미 다른 Microsoft 계정으로 로그인돼 있다면</p>
+<p><strong>시크릿 창(InPrivate)</strong> 을 열어서 접속하세요. 계정이 섞이면 4일 내내 헷갈립니다.
+크롬은 <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-shift">Shift</kbd><span>+</span><kbd class="key-n">N</kbd></span>, 엣지는 <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-shift">Shift</kbd><span>+</span><kbd class="key-n">N</kbd></span> 입니다. (macOS는 <span class="keys"><kbd class="key-command">Cmd</kbd><span>+</span><kbd class="key-shift">Shift</kbd><span>+</span><kbd class="key-n">N</kbd></span>)</p>
+</div>
+</li>
+<li>
+<p>배부받은 계정과 초기 비밀번호로 로그인합니다.</p>
+</li>
+<li>
+<p>배부받은 비밀번호로 <strong>바로 들어갑니다.</strong> 변경을 요구하지 않습니다.</p>
+<div class="admonition tip">
+<p class="admonition-title">바꾸고 싶으면 바꿔도 됩니다 (권장)</p>
+<p>배부된 비밀번호는 <strong>번호만 다른 공통 패턴</strong>입니다. 남이 추측할 수 있습니다.
+우상단 프로필 → <strong>내 계정 보기</strong> → <strong>암호</strong> 에서 바꿀 수 있습니다.</p>
+<p><strong>바꿨으면 반드시 메모하세요.</strong> 잊어버리면 강사가 초기화해 드려야 합니다 (2~3분).</p>
+</div>
+</li>
+<li>
+<p>추가 보안 정보(MFA) 등록을 요구할 수 있습니다. 화면 안내를 따르세요.</p>
+<div class="admonition question">
+<p class="admonition-title">휴대폰 인증을 요구하면 해도 되나요</p>
+<p>네, 본인 휴대폰으로 진행하세요. 테넌트 정책에 따라 요구될 수 있습니다.
+<strong>이 단계에서 막히면 바로 손을 드세요</strong> — 여기서 늦어지면 1일차 전체가 밀립니다.</p>
+</div>
+</li>
+</ol>
+<hr />
+<h2 id="2-7">2. 내 자리 확인하기 (7분)</h2>
+<h3 id="1">① 구독이 보이는가</h3>
+<p>포털 상단 검색창에 <strong>구독</strong> 을 입력하고 들어갑니다.
+구독이 <strong>하나</strong> 보이면 정상입니다. 이름과 <strong>구독 ID</strong>를 확인하세요.</p>
+<h3 id="2">② 내 리소스 그룹이 보이는가</h3>
+<p>검색창에 <strong>리소스 그룹</strong> 을 입력하고 들어갑니다.</p>
+<div class="admonition success">
+<p class="admonition-title">내 번호의 그룹 하나만 보여야 정상입니다</p>
+<p><code>rg-ai901-&lt;내 번호&gt;</code> 가 보이면 됩니다.
+<strong>다른 사람의 그룹은 보이지 않습니다.</strong> 권한이 내 그룹에만 주어졌기 때문입니다.</p>
+<p>여러 개가 보이거나 아무것도 안 보이면 <strong>손을 드세요.</strong> 권한 설정 문제입니다.</p>
+</div>
+<h3 id="3-east-us-2">③ 리전 확인 — 전원 <code>East US 2</code></h3>
+<p>Lab 01부터 리소스를 만들 때 고를 리전입니다. <strong>수강생 전원이 같은 리전</strong>을 씁니다.</p>
+<div class="admonition danger">
+<p class="admonition-title"><code>East US</code> 가 아니라 <code>East US 2</code> 입니다</p>
+<p>목록에서 바로 위아래로 붙어 있어 <strong>가장 많이 틀리는 지점</strong>입니다.
+<strong>숫자 2가 붙은 쪽</strong>을 고르세요. 한국어 포털에서는 <strong>미국 동부 2</strong>.</p>
+<p>이 리전이어야 4일 과정에 필요한 모델이 전부 보입니다.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">리소스 그룹의 “위치”와 달라도 정상입니다</p>
+<p>그룹을 클릭하면 <strong>위치(Location)</strong> 가 보입니다. 위 표와 달라도 <strong>문제가 아닙니다.</strong></p>
+<p>그룹의 위치는 <strong>그룹 정보가 저장되는 곳</strong>일 뿐입니다.
+<strong>리소스를 어느 리전에 만들지는 Lab 01에서 내가 고릅니다.</strong> 위 표를 따르세요.</p>
+</div>
+<hr />
+<h2 id="3-5">3. 내 환경 기록표 (5분)</h2>
+<div class="admonition warning">
+<p class="admonition-title">이 표를 꼭 적어 두세요</p>
+<p>4일 동안 계속 돌아와서 보게 됩니다.
+노트에 적거나, 메모장 파일로 만들어 두세요. <strong>외우려 하지 마세요.</strong></p>
+</div>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내 값</th>
+<th>어디서 확인</th>
+<th>처음 쓰는 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>내 번호</td>
+<td><code>____</code></td>
+<td>배부받은 종이</td>
+<td>—</td>
+</tr>
+<tr>
+<td>계정</td>
+<td><code>ai901-__@________</code></td>
+<td>배부받은 종이</td>
+<td>Lab 00</td>
+</tr>
+<tr>
+<td>리소스 그룹</td>
+<td><code>rg-ai901-__</code></td>
+<td>포털 → 리소스 그룹</td>
+<td>Lab 01</td>
+</tr>
+<tr>
+<td>리전</td>
+<td><code>____________</code></td>
+<td>번호별 표 (위 ③)</td>
+<td>Lab 01</td>
+</tr>
+<tr>
+<td>Foundry 리소스 이름</td>
+<td><em>(Lab 01에서 정함)</em></td>
+<td>—</td>
+<td>Lab 01</td>
+</tr>
+<tr>
+<td>프로젝트 이름</td>
+<td><em>(Lab 01에서 정함)</em></td>
+<td>—</td>
+<td>Lab 01</td>
+</tr>
+<tr>
+<td>모델 배포 이름</td>
+<td><em>(Lab 02에서 정함)</em></td>
+<td>—</td>
+<td>Lab 02</td>
+</tr>
+<tr>
+<td>엔드포인트</td>
+<td><em>(Lab 02에서 조립)</em></td>
+<td>—</td>
+<td>Lab 02</td>
+</tr>
+</tbody>
+</table>
+<p>아래 네 줄은 지금 비어 있는 게 정상입니다. 해당 랩에서 채웁니다.</p>
+<hr />
+<h2 id="4-python-3">4. Python 설치 확인 (3분)</h2>
+<div class="admonition danger">
+<p class="admonition-title">오늘 오후 Lab 02 에서 바로 씁니다 — 지금 확인하세요</p>
+<p>여기서 없는 걸 발견해야 <strong>점심시간에 설치</strong>할 수 있습니다.
+오후에 발견하면 혼자 20분 뒤처집니다.</p>
+</div>
+<p>터미널(Windows 는 <strong>PowerShell</strong>)을 열고:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows</label><label for="__tabbed_1_2">macOS · Linux</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">python</span> <span class="p">-</span><span class="n">-version</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python3<span class="w"> </span>--version
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><strong><code>Python 3.10</code> 이상</strong>이 나오면 통과입니다.</p>
+<details class="failure">
+<summary>“명령을 찾을 수 없습니다” / 버전이 3.10 미만입니다</summary>
+<p><strong>지금 손을 드세요.</strong> 설치는 쉽지만 10~20분 걸립니다.</p>
+<p>설치 절차는 <strong><a href="../../install/">수업 전 설치</a></strong> 에 화면 그림까지 정리돼 있습니다.
+그 페이지를 열어서 따라 하시면 됩니다.</p>
+<p>가장 많이 걸리는 두 지점만 미리 알려드립니다.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Windows</label><label for="__tabbed_2_2">macOS</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ul>
+<li>설치 첫 화면의 <strong>「Add python.exe to PATH」 체크</strong> ← 기본값이 꺼져 있습니다</li>
+<li>설치 뒤 <strong>터미널을 닫고 새로 여세요</strong></li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li><code>python</code> 이 아니라 <strong><code>python3</code></strong> 입니다</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">설치가 오래 걸리면 점심시간에 이어서</p>
+<p>Lab 01 은 포털에서만 하므로 Python 없이도 진행됩니다.
+<strong>Lab 02 시작 전까지만</strong> 되면 됩니다.</p>
+</div>
+<div class="admonition success">
+<p class="admonition-title">끝까지 안 되면 — 브라우저로 할 수 있습니다</p>
+<p>Foundry 포털에 <strong>웹용 VS Code</strong> 가 있습니다. Python 설치 없이 브라우저에서
+바로 코드를 돌릴 수 있어요. 방법은 <a href="../lab02-first-call/">Lab 02</a> 에 있습니다.</p>
+<p><strong>수업은 따라갈 수 있습니다.</strong> 혼자 설치하다 뒤처지지 마세요.</p>
+</div>
+</details>
+<hr />
+<h2 id="5-5">5. 권한의 경계 확인하기 (5분)</h2>
+<div class="admonition info">
+<p class="admonition-title">일부러 실패해 보는 단계입니다</p>
+<p>내 권한이 <strong>어디까지인지</strong> 직접 확인해 둡니다.
+이걸 지금 해보면 Lab 01에서 당황하지 않습니다.</p>
+</div>
+<ol>
+<li>포털 검색창 → <strong>리소스 그룹</strong> → <strong>+ 만들기</strong></li>
+<li>아무 이름이나 넣고 <strong>검토 + 만들기</strong> 를 눌러 봅니다</li>
+</ol>
+<div class="admonition success">
+<p class="admonition-title">실패하는 것이 정상입니다</p>
+<p>권한 오류(<code>AuthorizationFailed</code> 또는 "권한이 없습니다")가 나옵니다.</p>
+<p><strong>왜 그런가</strong> — 여러분의 권한은 <strong><code>rg-ai901-&lt;번호&gt;</code> 그룹 안에서만</strong> 유효합니다.
+구독 전체에 대한 권한은 없습니다. 의도된 설계입니다.</p>
+<table>
+<thead>
+<tr>
+<th>할 수 있는 것</th>
+<th>할 수 없는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>내 그룹 <strong>안에</strong> 리소스 만들기·지우기</td>
+<td><strong>새 리소스 그룹</strong> 만들기</td>
+</tr>
+<tr>
+<td>내 그룹 안의 키·엔드포인트 보기</td>
+<td>다른 사람 그룹 들여다보기</td>
+</tr>
+<tr>
+<td>내 그룹 안에서 모델 배포·에이전트 생성</td>
+<td>구독 설정·예산 변경</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">내 리소스 그룹 자체는 지우지 마세요</p>
+<p>그룹을 지우면 <strong>거기에 걸려 있던 내 권한도 함께 사라집니다.</strong>
+강사가 다시 만들어 줘야 하고, 그동안 실습을 못 합니다.</p>
+<p>4일차 Lab 16에서는 <strong>그룹 안의 리소스만</strong> 지웁니다. 그룹은 남겨 둡니다.</p>
+</div>
+<hr />
+<h2 id="6-3">6. 비용은 어떻게 보나 (선택 · 3분)</h2>
+<p>비용은 <strong>강사가 구독 단위로</strong> 보고 있습니다. 예산 알림도 강사 쪽에 걸려 있습니다.
+여러분이 따로 걸 것은 없습니다.</p>
+<div class="admonition question">
+<p class="admonition-title">그럼 내가 얼마 쓰는지는 어떻게 아나요</p>
+<p>포털 검색창 → <strong>비용 관리</strong> → <strong>비용 분석</strong> 에서 <strong>리소스 그룹</strong> 으로 필터하면
+내 그룹의 사용액을 볼 수 있습니다 (권한에 따라 안 보일 수도 있습니다).</p>
+<p>4일 실습 전체가 <strong>1인 몇십 센트 수준</strong>으로 설계돼 있습니다.
+다만 <strong>이미지 생성 모델 배포를 방치하면</strong> 단가가 높으니, Lab 14에서 꼭 지우세요.</p>
+</div>
+<hr />
+<h2 id="7">7. ✅ 체크포인트</h2>
+<div class="admonition success">
+<p class="admonition-title">여기까지 됐으면 통과입니다</p>
+<ul>
+<li>[ ] 배부받은 계정으로 포털에 <strong>로그인</strong>했다</li>
+<li>[ ] 지금 쓰는 비밀번호를 <strong>기억하고 있다</strong> (바꿨다면 메모했다)</li>
+<li>[ ] <strong>구독</strong> 이 하나 보인다</li>
+<li>[ ] <strong><code>rg-ai901-&lt;내 번호&gt;</code></strong> 그룹이 보인다 (내 것 하나만)</li>
+<li>[ ] 리전이 <strong><code>East US 2</code></strong> 라는 걸 확인했다 (<code>East US</code> 아님)</li>
+<li>[ ] <strong>환경 기록표</strong> 의 윗줄 네 개를 적었다</li>
+<li>[ ] <strong><code>python --version</code> 이 3.10 이상</strong>이다 ← 안 되면 점심에 설치</li>
+<li>[ ] 새 리소스 그룹 만들기가 <strong>실패하는 것</strong>을 확인했다</li>
+</ul>
+</div>
+<p><strong>다 체크됐으면 손을 들어 주세요.</strong> 전원이 끝나야 Lab 01로 넘어갑니다.</p>
+<hr />
+<h2 id="_1">🔧 안 될 때</h2>
+<details class="failure">
+<summary>로그인이 안 됩니다 (비밀번호가 틀리다고 나옵니다)</summary>
+<ol>
+<li>배부받은 비밀번호를 <strong>직접 타이핑</strong> 해 보세요 (복사하면 공백이 섞입니다)</li>
+<li>대소문자를 확인하세요</li>
+<li>계정 주소의 <strong>도메인 부분</strong>까지 정확히 넣었는지 확인하세요</li>
+<li>그래도 안 되면 <strong>손을 드세요.</strong> 강사가 비밀번호를 초기화합니다 (2~3분)</li>
+</ol>
+</details>
+<details class="failure">
+<summary>“조직에서 이 계정을 관리합니다” 같은 안내가 나옵니다</summary>
+<p>정상입니다. 교육용 테넌트의 계정이라서 그렇습니다. 계속 진행하세요.</p>
+</details>
+<details class="failure">
+<summary>MFA(추가 보안 정보) 등록에서 막혔습니다</summary>
+<ul>
+<li>휴대폰으로 SMS 또는 Authenticator 앱 등록을 진행하세요</li>
+<li>앱 설치가 오래 걸리면 <strong>전화(SMS) 방식</strong>을 고르세요</li>
+<li>그래도 막히면 <strong>손을 드세요.</strong> 정책 예외를 적용할 수 있습니다</li>
+</ul>
+</details>
+<details class="failure">
+<summary>리소스 그룹 목록이 비어 있습니다</summary>
+<ol>
+<li>우상단 프로필을 눌러 <strong>배부받은 계정으로 로그인됐는지</strong> 확인하세요
+   (개인 계정으로 들어가 있는 경우가 가장 많습니다)</li>
+<li>우상단 <strong>디렉터리 전환</strong>에서 교육용 디렉터리가 선택돼 있는지 확인하세요</li>
+<li>브라우저를 <strong>시크릿 창</strong>으로 다시 열어 보세요</li>
+<li>그래도 비어 있으면 <strong>손을 드세요</strong> — 권한 부여가 누락된 것입니다</li>
+</ol>
+</details>
+<details class="failure">
+<summary>다른 사람의 리소스 그룹도 보입니다</summary>
+<p>권한이 너무 넓게 들어간 것입니다. <strong>손을 드세요.</strong>
+다른 사람 그룹에는 <strong>아무것도 하지 마세요.</strong></p>
+</details>
+<details class="failure">
+<summary>포털이 영어로 나옵니다</summary>
+<p>오른쪽 위 <strong>⚙️(설정) → 언어 및 지역 → 한국어</strong> 로 바꿀 수 있습니다.
+이 가이드는 한국어 메뉴 기준이지만, 영어로 쓰실 경우 괄호 안 영어 이름을 참고하세요.</p>
+</details>
+<hr />
+<h2 id="_2">💡 각자 구독으로 진행하는 경우</h2>
+<div class="admonition info">
+<p class="admonition-title">이 과정의 기본은 강사 배부 계정입니다</p>
+<p>사정상 <strong>본인 구독</strong>으로 진행하는 경우에만 아래를 참고하세요.
+강사가 별도로 안내하지 않았다면 해당되지 않습니다.</p>
+<ol>
+<li><strong>Azure for Students</strong> (<code>azure.microsoft.com/free/students</code>) — 학교 이메일로 가입,
+   <strong>카드 불필요</strong>, $100 / 12개월. 학교 도메인이 Microsoft 학술 인증 목록에 없으면 실패할 수 있습니다.</li>
+<li>가입 후 <strong>비용 관리 → 예산</strong> 에서 본인 구독에 <strong>$20</strong> 예산 알림을 직접 거세요.</li>
+<li>이후 모든 랩에서 <code>rg-ai901-&lt;번호&gt;</code> 는 <strong>본인이 만든 리소스 그룹 이름</strong>으로 바꿔 읽으세요.
+   본인 구독에서는 새 리소스 그룹을 <strong>직접 만들 수 있습니다.</strong></li>
+</ol>
+<p>나머지 절차는 Lab 01부터 <strong>완전히 같습니다.</strong></p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.instant", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

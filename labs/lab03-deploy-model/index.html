@@ -1,0 +1,1939 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Microsoft Foundry로 직접 만들어 보는 AI-901 4일 hands-on 랩">
+      
+      
+      
+        <link rel="canonical" href="https://skilleat-labs.github.io/ai901-labs/labs/lab03-deploy-model/">
+      
+      
+        <link rel="prev" href="../lab02-first-call/">
+      
+      
+        <link rel="next" href="../lab04-tokens/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 03 — 모델 배포 제대로 하기 - AI-901 실습 랩</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-03" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="AI-901 실습 랩" class="md-header__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-901 실습 랩
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 03 — 모델 배포 제대로 하기
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-901 실습 랩" class="md-nav__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-901 실습 랩
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수업 전 설치
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1일차 — 개념과 환경
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1일차 — 개념과 환경
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab00-subscription/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 00 — Azure 구독과 예산 알림
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab01-foundry-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 01 — Foundry 리소스와 프로젝트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab02-first-call/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 02 — 키·Python 환경·첫 연결
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2일차 — 모델과 프롬프트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2일차 — 모델과 프롬프트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 03 — 모델 배포 제대로 하기
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 03 — 모델 배포 제대로 하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 어제 만든 배포를 다시 엽니다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 배포 유형 (8분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 배포 유형 (8분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        종량제 안에도 갈래가 있습니다 — 어제 겪은 그것
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        확인해 보세요
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 모델 버전 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-tpm-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 속도 제한 — TPM (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 속도 제한 — TPM (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해보세요
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 가드레일 — 컨텐츠 필터 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 가드레일 — 컨텐츠 필터 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        네 가지 범주
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        가장 중요한 것 — 입력과 출력에 따로 적용됩니다
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        확인해 보세요
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 오늘 기억할 한 줄
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 — 첫 호출 확장과 토큰
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab05-chat-memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 05 — 대화를 기억하는 챗봇
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 — 매개변수 실험
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab07-system-grounding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 — 시스템 메시지와 근거 기반 답변
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3일차 — 에이전트와 언어
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3일차 — 에이전트와 언어
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-agent-portal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 — 포털에서 에이전트 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab09-agent-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09 — 코드에서 에이전트 호출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab10-text-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 10 — 텍스트 분석 두 가지 방법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab11-speech/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 11 — 음성 인식과 합성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab12-voice-live-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 12 — Voice Live (강사 데모)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4일차 — 비전·추출과 시험
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4일차 — 비전·추출과 시험
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab13-multimodal-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13 — 멀티모달 이미지 분석
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab14-image-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 14 — 이미지 생성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab15-content-understanding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15 — Content Understanding 추출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab16-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 16 — 리소스 전체 정리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 어제 만든 배포를 다시 엽니다
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 배포 유형 (8분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 배포 유형 (8분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        종량제 안에도 갈래가 있습니다 — 어제 겪은 그것
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        확인해 보세요
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 모델 버전 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-tpm-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 속도 제한 — TPM (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 속도 제한 — TPM (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        해보세요
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 가드레일 — 컨텐츠 필터 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 가드레일 — 컨텐츠 필터 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        네 가지 범주
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        가장 중요한 것 — 입력과 출력에 따로 적용됩니다
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        확인해 보세요
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 오늘 기억할 한 줄
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-03">Lab 03 — 모델 배포 제대로 하기</h1>
+<div class="admonition info">
+<p class="admonition-title">이 실습에서 하는 것</p>
+<p>어제는 "연결 확인용"으로 아무 생각 없이 배포했습니다.
+오늘은 <strong>배포할 때 정하는 네 가지</strong>를 하나씩 보면서 왜 그 값인지 이해합니다.</p>
+</div>
+<p><strong>선행</strong> <a href="../lab02-first-call/">Lab 02</a> 완료 · <strong>예상 시간</strong> 35분 · <strong>비용</strong> 0원 (설정만 봅니다)</p>
+<hr />
+<h2 id="0">0. 어제 만든 배포를 다시 엽니다</h2>
+<p>새로 만들지 않습니다. <strong>어제 배포한 <code>gpt-5.4-mini</code> 의 설정을 열어</strong> 하나씩 확인합니다.</p>
+<ol>
+<li><a href="https://ai.azure.com">ai.azure.com</a> → 내 프로젝트 → <strong>배포(Deployments)</strong></li>
+<li><code>gpt-5.4-mini</code> 클릭</li>
+<li><strong>편집</strong> 또는 설정 화면을 엽니다</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">배포할 때 정하는 네 가지</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>무엇</th>
+<th>어디서 다루나</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>배포 유형</strong></td>
+<td>1절</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>모델 버전</strong></td>
+<td>2절</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>속도 제한 (TPM)</strong></td>
+<td>3절</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>가드레일 (컨텐츠 필터)</strong></td>
+<td>4절</td>
+</tr>
+</tbody>
+</table>
+<p><strong>★ 이 네 가지가 시험에 그대로 나옵니다.</strong></p>
+</div>
+<hr />
+<h2 id="1-8">1. 배포 유형 (8분)</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>종량제 (Pay-as-you-go)</th>
+<th>확보형 (Provisioned / PTU)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>결제</td>
+<td><strong>쓴 만큼</strong></td>
+<td><strong>확보한 만큼</strong> (안 써도 과금)</td>
+</tr>
+<tr>
+<td>성능</td>
+<td>공유 — 몰리면 느려질 수 있음</td>
+<td>보장됨</td>
+</tr>
+<tr>
+<td>적합</td>
+<td>요청량이 <strong>불규칙</strong>할 때</td>
+<td>일정 성능을 <strong>보장</strong>해야 할 때</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_1">종량제 안에도 갈래가 있습니다 — 어제 겪은 그것</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Standard (지역)</th>
+<th><strong>Global Standard</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>처리 위치</td>
+<td><strong>내 지역 안에서</strong></td>
+<td>전 세계로 분산</td>
+</tr>
+<tr>
+<td>할당량</td>
+<td>지역별로 따로</td>
+<td>훨씬 넉넉</td>
+</tr>
+<tr>
+<td>적합</td>
+<td>데이터 소재지 규제가 있을 때</td>
+<td><strong>일반적인 경우</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">어제 <code>Global Standard</code> 를 고른 이유가 이겁니다</p>
+<p>할당량 자체가 다릅니다. <code>gpt-5.4-mini</code> 는 신규 구독 기준으로
+<strong><code>Global Standard</code> 에만 할당량이 있습니다</strong> — 1,000K TPM 입니다.
+지역형 <code>Standard</code> 는 <strong>기본 할당량이 없어서</strong> 고르면 배포가 실패합니다.</p>
+<p>32명 × 10K = 320K 이므로 <code>Global Standard</code> 로 3배 여유가 생깁니다.</p>
+<p><strong>★ 시험 포인트 — 세 단계를 구분하세요</strong></p>
+<table>
+<thead>
+<tr>
+<th>배포 유형</th>
+<th>처리 범위</th>
+<th>이런 조건일 때</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Standard</strong> (지역)</td>
+<td><strong>내가 고른 단일 리전 안</strong></td>
+<td>"데이터가 <strong>특정 국가</strong> 안에서"</td>
+</tr>
+<tr>
+<td><strong>DataZone</strong></td>
+<td><strong>여러 국가를 묶은 권역</strong> (EU / US 등)</td>
+<td>"데이터가 <strong>EU 안에서</strong>"</td>
+</tr>
+<tr>
+<td><strong>Global Standard</strong></td>
+<td>전 세계로 분산</td>
+<td>소재지 제약이 <strong>없을 때</strong> (기본)</td>
+</tr>
+</tbody>
+</table>
+<p><code>DataZone</code> 을 "한 국가"로 외우면 틀립니다. <strong>EU 데이터 존은 여러 유럽 국가를 포함</strong>합니다.
+"한 국가 안"이 조건이면 <strong>지역형 Standard</strong> 입니다.</p>
+</div>
+<h3 id="_2">확인해 보세요</h3>
+<p>배포 화면에서 현재 유형이 무엇으로 되어 있는지 봅니다. 어제 만든 건 <strong>Global Standard</strong> 입니다.</p>
+<div class="admonition question">
+<p class="admonition-title">우리는 왜 종량제인가요</p>
+<p>수업에서는 하루에 몇 번만 호출합니다. 확보형으로 잡으면 <strong>수업하지 않는 밤새도록 과금</strong>됩니다.
+크레딧이 하루 만에 사라집니다.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">★ 시험에 이렇게 나옵니다</p>
+<blockquote>
+<p>"사내 챗봇을 배포했는데 요청량이 시간대별로 들쭉날쭉하고 야간에는 호출이 거의 없다.
+비용 측면에서 가장 적합한 배포 유형은?"</p>
+</blockquote>
+<p>→ <strong>종량제.</strong> "요청량이 불규칙하다"가 나오면 종량제입니다.
+반대로 "일정 성능을 보장해야 한다"가 나오면 확보형입니다.</p>
+</div>
+<hr />
+<h2 id="2-5">2. 모델 버전 (5분)</h2>
+<p>배포 화면에서 <strong>버전</strong>과 <strong>업데이트 정책</strong>을 확인합니다.</p>
+<table>
+<thead>
+<tr>
+<th>선택</th>
+<th>의미</th>
+<th>언제</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>버전 고정</strong></td>
+<td><strong>모델이 바뀌지 않음</strong></td>
+<td><strong>프로덕션</strong> — 동작이 바뀌면 안 될 때</td>
+</tr>
+<tr>
+<td><strong>자동 업데이트</strong></td>
+<td>최신 개선을 자동 반영</td>
+<td>개발·실험</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">★ 버전을 고정해도 <strong>답이 똑같이 나오지는 않습니다</strong></p>
+<p>헷갈리기 쉬운 지점입니다. 둘은 다른 이야기입니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>버전 고정이 보장하는 것</th>
+<th>보장하지 않는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>무엇</td>
+<td><strong>모델 자체가 안 바뀜</strong></td>
+<td><strong>매번 같은 문장</strong></td>
+</tr>
+<tr>
+<td>왜</td>
+<td>어느 날 갑자기 성격이 변하지 않음</td>
+<td>생성은 <strong>확률적 샘플링</strong>이기 때문</td>
+</tr>
+</tbody>
+</table>
+<p>같은 질문을 두 번 해도 답이 다를 수 있습니다. Lab 06에서 직접 확인합니다.
+출력을 최대한 안정시키려면 <strong><code>temperature=0</code></strong> 을 씁니다 —
+그래도 <strong>완전히 같다는 보장은 없습니다.</strong></p>
+<p>정리하면 — <strong>버전 고정은 "모델"을 고정하고, <code>temperature=0</code> 은 "출력"을 안정시킵니다.</strong></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">모델은 언젠가 종료됩니다 (retire)</p>
+<p>오래된 버전은 Microsoft가 공지 후 서비스를 종료합니다.
+버전을 고정했다면 <strong>종료 공지를 챙겨 봐야 합니다.</strong> 안 그러면 어느 날 갑자기 멈춥니다.</p>
+</div>
+<hr />
+<h2 id="3-tpm-10">3. 속도 제한 — TPM (10분)</h2>
+<p><strong>TPM = Tokens Per Minute, 분당 처리 가능한 토큰 수</strong>입니다.</p>
+<table>
+<thead>
+<tr>
+<th>알아야 할 것</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>무엇을 세나</td>
+<td><strong>입력 + 출력 토큰</strong>, 분당 기준</td>
+</tr>
+<tr>
+<td>높이면</td>
+<td>동시에 더 많은 요청을 받을 수 있습니다</td>
+</tr>
+<tr>
+<td>어디서 빠지나</td>
+<td><strong>구독 전체 할당량에서 차감</strong> — 모델·리전별 총량을 여러 배포가 나눠 씁니다</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">TPM 은 응답의 <code>total_tokens</code> 를 더한 값이 아닙니다</p>
+<p>Lab 04에서 본 <code>usage.total_tokens</code> 는 <strong>그 호출이 실제로 쓴 양</strong>입니다.
+TPM 은 <strong>속도 제한</strong>이라서, 서비스가 요청을 받을 때 <strong>미리 추정</strong>해서 깎습니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>usage.total_tokens</code></th>
+<th>TPM 차감</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시점</td>
+<td>응답이 <strong>온 뒤</strong></td>
+<td>요청을 <strong>받을 때</strong></td>
+</tr>
+<tr>
+<td>값</td>
+<td>실제 사용량</td>
+<td><strong>추정값</strong> (요청 크기 + 요청한 최대 출력 길이)</td>
+</tr>
+</tbody>
+</table>
+<p>그래서 <strong>출력이 짧게 끝나도</strong> 큰 <code>max_output_tokens</code> 를 요청했다면
+그만큼 한도를 쓴 것으로 계산될 수 있습니다.
+"실제로 조금 썼는데 왜 429?" 의 답이 이것입니다.</p>
+</div>
+<h3 id="_3">해보세요</h3>
+<ol>
+<li>배포 설정에서 <strong>TPM 값</strong>을 확인합니다</li>
+<li>값을 조금 올려 봅니다 (예: 10K → 20K)</li>
+<li><strong>저장</strong>합니다</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">어제 429 오류가 났던 분</p>
+<p>같은 교실에서 동시에 요청이 몰리면 TPM 한도에 걸립니다.
+여기서 올려두면 오늘 실습이 편해집니다.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">★ 시험에 이렇게 나옵니다</p>
+<blockquote>
+<p>"429 Too Many Requests 오류가 반복된다. 무엇을 조정해야 하는가?"</p>
+</blockquote>
+<p>→ <strong>TPM 할당량.</strong> 키나 엔드포인트 문제가 아닙니다.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">실무에서는 429 의 원인이 여러 개입니다</p>
+<p>시험 답은 TPM 이지만, <strong>실제로 429 가 나는 이유는 이렇게 나뉩니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th>원인</th>
+<th>증상</th>
+<th>대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TPM 한도</strong></td>
+<td>긴 프롬프트를 몰아 보낼 때</td>
+<td>할당량 올리기 · 프롬프트 줄이기</td>
+</tr>
+<tr>
+<td><strong>RPM(분당 요청 수) 한도</strong></td>
+<td>짧은 요청을 아주 자주 보낼 때</td>
+<td>호출 간격 두기</td>
+</tr>
+<tr>
+<td><strong>구독 전체 할당량 소진</strong></td>
+<td>다른 사람 배포가 다 써버림</td>
+<td>배포별 TPM 나누기</td>
+</tr>
+<tr>
+<td><strong>일시적 혼잡</strong></td>
+<td>특정 시간대에만</td>
+<td><strong>재시도</strong> (SDK가 자동으로 함)</td>
+</tr>
+</tbody>
+</table>
+<p><code>openai</code> SDK 는 429 를 <strong>자동으로 두 번 재시도</strong>합니다.
+그래도 실패했다면 일시적 혼잡이 아니라 <strong>한도 문제</strong>로 보는 게 맞습니다.</p>
+</div>
+<hr />
+<h2 id="4-10">4. 가드레일 — 컨텐츠 필터 (10분)</h2>
+<p>모델이 유해한 내용을 <strong>받지도, 내보내지도</strong> 않게 막는 장치입니다.</p>
+<h3 id="_4">네 가지 범주</h3>
+<table>
+<thead>
+<tr>
+<th>범주</th>
+<th>무엇을 막나</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>증오 · 공정성</td>
+<td>특정 집단을 겨냥한 차별적 표현</td>
+</tr>
+<tr>
+<td>성적 콘텐츠</td>
+<td>부적절한 성적 표현</td>
+</tr>
+<tr>
+<td>폭력</td>
+<td>폭력·상해를 조장하는 내용</td>
+</tr>
+<tr>
+<td>자해</td>
+<td>자해를 조장하거나 방법을 알려주는 내용</td>
+</tr>
+</tbody>
+</table>
+<p>각 범주마다 <strong>심각도 단계</strong>를 조절할 수 있습니다.</p>
+<h3 id="_5">가장 중요한 것 — 입력과 출력에 따로 적용됩니다</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>사용자 입력 ──[입력 필터]──&gt; 모델 ──[출력 필터]──&gt; 사용자에게
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">★ 시험에 이렇게 나옵니다</p>
+<blockquote>
+<p>"입력은 통과했는데 출력이 차단됐다. 어느 설정을 조정해야 하는가?"</p>
+</blockquote>
+<p>→ <strong>출력 필터.</strong> 둘이 따로 설정된다는 걸 알아야 풀립니다.</p>
+</div>
+<h3 id="_6">확인해 보세요</h3>
+<ol>
+<li>배포 설정에서 <strong>컨텐츠 필터</strong> 항목을 찾습니다</li>
+<li>현재 적용된 필터를 열어 <strong>네 범주와 심각도</strong>를 눈으로 확인합니다</li>
+<li><strong>입력(프롬프트)</strong> 과 <strong>출력(완성)</strong> 이 나뉘어 있는지 봅니다</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">필터를 끄지 마세요</p>
+<p>학생 구독에서는 보통 기본 필터가 고정되어 있습니다.
+바꿀 수 있더라도 <strong>수업 중에는 기본값 그대로</strong> 두세요.</p>
+</div>
+<hr />
+<h2 id="5">5. ✅ 체크포인트</h2>
+<div class="admonition success">
+<p class="admonition-title">여기까지 됐으면 통과입니다</p>
+<ul>
+<li>[ ] 내 배포의 <strong>배포 유형</strong>이 무엇인지 말할 수 있다</li>
+<li>[ ] <strong>버전 고정 vs 자동 업데이트</strong>의 차이를 말할 수 있다</li>
+<li>[ ] <strong>TPM</strong> 값을 확인했고, 그것이 <strong>속도 제한</strong>(실사용량 합계가 아님)이라는 걸 안다</li>
+<li>[ ] <strong>컨텐츠 필터 4범주</strong>를 찾았고, <strong>입력과 출력이 따로</strong>라는 걸 확인했다</li>
+</ul>
+</div>
+<p><strong>설정 화면을 캡처해 두면</strong> 오늘 저녁 복습에 좋습니다.</p>
+<hr />
+<h2 id="_7">🔧 안 될 때</h2>
+<details class="failure">
+<summary>배포 설정에서 TPM을 바꿀 수 없습니다</summary>
+<p>학생 구독은 할당량 상한이 낮게 묶여 있을 수 있습니다.</p>
+<ul>
+<li>현재 값만 확인하고 넘어가세요. <strong>실습에는 지장 없습니다</strong></li>
+<li>오늘 429가 반복되면 손을 드세요</li>
+</ul>
+</details>
+<details class="failure">
+<summary>컨텐츠 필터 항목이 안 보입니다</summary>
+<p>배포 상세 화면 또는 프로젝트의 <strong>안전성(Safety)</strong> 메뉴에 있습니다.
+포털 구성이 자주 바뀌니 <strong>메뉴 이름으로 검색</strong>해 보세요. 못 찾으면 손을 드세요.</p>
+</details>
+<details class="failure">
+<summary>설정을 바꿨더니 배포가 “업데이트 중”에서 멈춰 있습니다</summary>
+<p>1~2분 걸립니다. 새로고침해 보세요.
+5분 넘게 멈춰 있으면 손을 드세요.</p>
+</details>
+<hr />
+<h2 id="_8">💡 오늘 기억할 한 줄</h2>
+<div class="admonition quote">
+<p><strong>배포할 때 정하는 네 가지 — 배포 유형 · 버전 · TPM · 가드레일.</strong>
+시험에서 "배포 시 고려할 사항"을 물으면 이 네 개입니다.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.instant", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
