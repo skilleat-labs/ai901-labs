@@ -46,10 +46,25 @@
 
 ```text
 번호        01
-계정        ai901-01@<테넌트도메인>
+계정        ai901-01@nrkim0615outlook.onmicrosoft.com
 초기 비밀번호  <배부된 값>
 리소스 그룹   rg-ai901-01
 ```
+
+!!! tip "계정 주소는 번호만 바뀝니다"
+    배부받은 종이를 잃어버렸어도 **본인 번호만 알면** 주소를 만들 수 있습니다.
+
+    ```text
+    ai901-<두 자리 번호>@nrkim0615outlook.onmicrosoft.com
+
+    7번이면   ai901-07@nrkim0615outlook.onmicrosoft.com
+    12번이면  ai901-12@nrkim0615outlook.onmicrosoft.com
+    ```
+
+    **번호는 한 자리라도 앞에 `0` 을 붙여 두 자리로** 씁니다 (`ai901-7` ❌ / `ai901-07` ✅).
+    리소스 그룹도 같은 번호입니다 — `rg-ai901-07`.
+
+    비밀번호는 계정마다 다릅니다. 분실하면 강사에게 말씀하세요 (초기화 2~3분).
 
 1. 브라우저에서 [portal.azure.com](https://portal.azure.com) 에 접속합니다.
 
