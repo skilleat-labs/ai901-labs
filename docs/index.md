@@ -42,7 +42,7 @@
 | [Lab 07](labs/lab07-system-grounding.md) | 2일차 | 시스템 메시지와 근거 기반 답변 | 25 |
 | [Lab 08](labs/lab08-agent-portal.md) | 3일차 | 포털에서 에이전트 + 지식 붙이기 | 40 |
 | [Lab 09](labs/lab09-agent-code.md) | 3일차 | 코드에서 에이전트 호출 (Azure CLI 설치 + ID 인증) | 36~46 |
-| [Lab 10](labs/lab10-text-analysis.md) | 3일차 | 텍스트 분석 — 범용 모델 vs 전용 서비스 | 30 |
+| [Lab 10](labs/lab10-text-analysis.md) | 3일차 | 텍스트 분석 — 범용 모델 vs 전용 서비스(둘 다 실행) | 35 |
 | [Lab 11](labs/lab11-speech.md) | 3일차 | 음성 인식·합성 (STT·TTS) | 25 |
 | [Lab 12](labs/lab12-voice-live-demo.md) | 3일차 | Voice Live 실시간 — **강사 데모** | 15 |
 | [Lab 13](labs/lab13-multimodal-image.md) | 4일차 | 멀티모달 이미지 (URL·base64) | 36 |

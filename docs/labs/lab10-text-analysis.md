@@ -4,7 +4,7 @@
     고객 리뷰에서 **감정 · 엔터티 · 키 구문 · 요약**을 뽑습니다.
     그리고 **범용 모델**과 **전용 서비스** 중 무엇을 쓸지 판단하는 기준을 잡습니다.
 
-**선행** [Lab 04](lab04-tokens.md) 완료 · **예상 시간** 30분 · **비용** 약 $0.03 미만
+**선행** [Lab 04](lab04-tokens.md) 완료 · **예상 시간** 35분 · **비용** 약 $0.03 미만
 
 ---
 
@@ -140,31 +140,95 @@ python analyze_general.py
 
 ---
 
-## 3. 전용 서비스는 무엇이 다른가 (5분)
+## 3. 전용 서비스는 무엇이 다른가 — 직접 돌려봅니다 (10분)
 
-Azure Language SDK를 쓰면 이런 형태로 돌아옵니다.
+!!! success "새 리소스도, 새 키도 필요 없습니다"
+    Lab 01에서 만든 Foundry 리소스가 **Language 도 같이 제공합니다.**
+    키는 지금 쓰는 `API_KEY` 그대로고, **주소만 다릅니다.**
 
-```python
-# analyze_language.py — 참고용 (오늘은 실행하지 않습니다)
+    | | 주소 |
+    |---|---|
+    | 모델 호출 (Lab 04~) | `https://<리소스명>.openai.azure.com/openai/v1` |
+    | **Language 호출 (지금)** | `https://<리소스명>.cognitiveservices.azure.com/` |
+
+패키지를 설치합니다.
+
+```ini title="requirements.txt 에 추가"
+azure-ai-textanalytics==5.4.0
+```
+
+```bash
+pip install -r requirements.txt
+```
+
+`.env` 에 **한 줄 추가**합니다. `<리소스명>` 은 지금 쓰는 엔드포인트 주소에서 그대로 가져오세요.
+
+```ini
+LANGUAGE_ENDPOINT=https://<리소스명>.cognitiveservices.azure.com/
+```
+
+```python title="analyze_language.py"
+import os
+from dotenv import load_dotenv
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.textanalytics import TextAnalyticsClient
+
+load_dotenv()
+client = TextAnalyticsClient(
+    endpoint=os.getenv("LANGUAGE_ENDPOINT"),
+    credential=AzureKeyCredential(os.getenv("API_KEY")))
+
+review = """지난주에 강남점에서 산 무선 이어폰인데요,
+음질은 생각보다 훨씬 좋았습니다. 다만 배송이 5일이나 걸려서 답답했고
+포장도 좀 허술했어요. 김민수 매니저님이 친절하게 응대해 주신 건 좋았습니다."""
+
 result = client.analyze_sentiment(documents=[review])[0]
 
-print(result.sentiment)                    # "mixed"  ← 혼합을 혼합이라고 답합니다
-print(result.confidence_scores.positive)   # 0.62
-print(result.confidence_scores.negative)   # 0.31
+print("문서 전체:", result.sentiment)
+print("  긍정", result.confidence_scores.positive,
+      "/ 중립", result.confidence_scores.neutral,
+      "/ 부정", result.confidence_scores.negative)
+
+for s in result.sentences:
+    print(f"  [{s.sentiment}] {s.text.strip()}")
 ```
+
+```bash
+python analyze_language.py
+```
+
+### 나오는 결과
+
+```text
+문서 전체: mixed
+  긍정 0.65 / 중립 0.03 / 부정 0.32
+  [positive] 지난주에 강남점에서 산 무선 이어폰인데요, 음질은 생각보다 훨씬 좋았습니다.
+  [negative] 다만 배송이 5일이나 걸려서 답답했고 포장도 좀 허술했어요.
+  [positive] 김민수 매니저님이 친절하게 응대해 주신 건 좋았습니다.
+```
+
+!!! question "★ 2절에서 본 것과 비교하세요"
+    범용 모델은 `긍정 | 부정 | 중립` 중 하나를 **골라야** 했습니다. 그래서 `"부정"` 이 나왔죠.
+    전용 서비스는 **`mixed`** 라고 답합니다. 혼합을 혼합이라고 말할 수 있습니다.
+
+    거기에 **점수**가 붙고, **문장별로** 어디가 긍정이고 어디가 부정인지까지 나눠 줍니다.
+    그리고 **몇 번을 돌려도 같은 값**입니다. 2절에서 요약 문장이 매번 달라지던 것과 반대입니다.
 
 !!! note "★ 반환값의 차이가 시험에 나옵니다"
     | | 범용 모델 | 전용 서비스 |
     |---|---|---|
-    | 감정 | `"부정"` · `"중립"` — 돌릴 때마다 흔들리는 문자열 하나 | `mixed` + **`confidence_scores`** (긍정 0.62 / 부정 0.31) |
-    | 형식 | 요청한 대로 (흔들림) | **항상 같은 객체** |
+    | 감정 | `"부정"` · `"중립"` — 셋 중 하나를 고른 문자열 | **`mixed`** — 혼합을 혼합이라고 답한다 |
+    | 신뢰도 | **없다** | `confidence_scores` (0.65 / 0.03 / 0.32) |
+    | 세분화 | 문서 하나에 값 하나 | **문장별 감정**까지 |
+    | 형식 | 요청한 대로 (표현이 흔들림) | **항상 같은 객체 · 같은 값** |
+    | 할 수 있는 것 | 요약·번역·분류를 **한 번에** | 감정 하나만, 대신 **확실하게** |
 
     **"신뢰도 점수가 필요하다"** 가 문제에 나오면 → **전용 서비스**입니다.
     이게 3강에서 배운 "생성형 AI가 이전 AI를 대체하지 않는다"의 실체입니다.
 
-!!! tip "오늘 실행하지 않는 이유"
-    Azure Language 리소스를 따로 연결해야 해서 시간이 더 듭니다.
-    **선택의 기준**을 아는 게 시험과 실무에 더 중요합니다.
+!!! tip "비용"
+    Azure AI Language 는 **월 5,000건까지 무료 한도**가 있습니다.
+    오늘 수업에서 쓰는 양은 한도 안에 들어갑니다.
 
 ---
 
@@ -174,6 +238,7 @@ print(result.confidence_scores.negative)   # 0.31
     - [ ] `analyze_general.py` 가 JSON으로 네 가지를 뽑았다
     - [ ] 여러 번 돌려 **요약 문장과 키구문 표기가 달라지는 것**을 확인했다
     - [ ] `temperature=0` 으로 안정되는 것을 확인했다
+    - [ ] `analyze_language.py` 가 `mixed` 와 신뢰도 점수를 돌려줬다
     - [ ] **언제 전용 서비스를 쓰는지** 한 문장으로 말할 수 있다
 
 ---
@@ -197,6 +262,16 @@ print(result.confidence_scores.negative)   # 0.31
 ??? failure "f-string 안의 중괄호에서 오류가 납니다"
     f-string 안에서 JSON의 `{` 는 **`{{`** 로 써야 합니다.
     위 코드가 그렇게 되어 있으니 그대로 복사하세요.
+
+??? failure "Language 호출에서 401 · 404 가 납니다"
+    주소부터 확인하세요. **`.openai.azure.com` 이 아니라 `.cognitiveservices.azure.com`** 입니다.
+    끝의 슬래시까지 포함하고, `/openai/v1` 같은 경로는 **붙이지 않습니다.**
+
+    ```python
+    print(os.getenv("LANGUAGE_ENDPOINT"))
+    ```
+
+    주소가 맞는데도 안 되면 리소스에 Language 기능이 없는 경우입니다. **손을 드세요.**
 
 ??? failure "엔터티를 제대로 못 찾습니다"
     작은 모델의 한계입니다. 리뷰 문장을 더 명확하게 바꾸거나,
