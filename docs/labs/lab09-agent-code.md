@@ -8,6 +8,60 @@
 
 ---
 
+## 0. 시작 전 — 폴더와 가상 환경 (2분)
+
+어제 쓰던 폴더로 가서 가상 환경을 켭니다.
+
+```bash
+cd ai901
+```
+
+=== "Windows"
+    ```powershell
+    .venv\Scripts\activate
+    ```
+=== "macOS · Linux"
+    ```bash
+    source .venv/bin/activate
+    ```
+
+프롬프트 앞에 **`(.venv)`** 가 붙으면 준비 완료입니다.
+
+```text
+(.venv) C:\Users\hong\ai901>
+```
+
+!!! warning "이 랩에서 특히 자주 놓칩니다"
+    터미널을 새로 열면 가상 환경이 **꺼집니다.** 그런데 이 랩에는 Azure CLI 를 설치하고
+    **터미널을 새로 여는 단계**가 있습니다. 그때 `(.venv)` 가 사라지니,
+    **새 터미널을 열 때마다 위 두 줄을 다시 실행**하세요.
+
+??? failure "Windows — `.venv\Scripts\activate` 를 쳤는데 아무 반응이 없거나 오류가 납니다"
+    **1. 폴더가 맞는지 확인하세요.** `ai901` 폴더 안이어야 합니다.
+
+    ```powershell
+    dir .venv
+    ```
+
+    `.venv` 가 안 보이면 폴더를 잘못 찾은 것입니다. Lab 02 에서 만든 폴더로 이동하세요.
+
+    **2. "이 시스템에서 스크립트를 실행할 수 없으므로" 오류가 나면** PowerShell 실행 정책 때문입니다.
+    아래를 실행한 뒤 다시 켜세요.
+
+    ```powershell
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+    ```
+
+    이 창에서만 적용됩니다. 시스템 설정을 바꾸지 않으니 안전합니다.
+
+    **3. 그래도 안 되면** 명령 프롬프트(cmd)에서 아래를 쓰세요.
+
+    ```text
+    .venv\Scripts\activate.bat
+    ```
+
+---
+
 ## 1. Azure CLI 설치·로그인 — 다 같이 (10분, 설치가 필요하면 +10분)
 
 ### 왜 키를 안 쓰나
