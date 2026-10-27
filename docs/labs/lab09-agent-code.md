@@ -153,7 +153,7 @@ Lab 02에서 만든 `requirements.txt` 에 **두 줄을 추가**합니다.
 openai==2.46.0
 python-dotenv==1.2.4
 azure-identity==1.25.3
-azure-ai-projects==2.9.0
+azure-ai-projects==2.4.0
 ```
 
 ```bash
@@ -163,10 +163,18 @@ pip install -r requirements.txt
 !!! tip "`(.venv)` 가 보이는지 먼저 확인"
     가상 환경이 꺼져 있으면 엉뚱한 곳에 설치됩니다.
 
-!!! warning "버전을 고정한 이유"
+!!! warning "버전을 고정한 이유 — 특히 `azure-ai-projects==2.4.0`"
     `azure-ai-projects` 는 아직 변화가 빠른 패키지입니다.
     버전이 올라가면 `agents.get()` 이나 `extra_body` 의 형태가 달라질 수 있어서
     **교실 전체를 같은 버전으로** 맞춥니다.
+
+    **`2.5.0` 이상을 넣으면 설치가 실패합니다.** 최신 버전은 `openai>=3.0.0` 을 요구하는데,
+    우리는 Lab 02부터 `openai==2.46.0` 으로 맞춰 왔습니다. `2.4.0` 은 `openai>=2.8.0` 이라 그대로 맞습니다.
+
+    | `azure-ai-projects` | 요구하는 openai | 우리 환경 |
+    |---|---|---|
+    | 2.5.0 이상 (최신) | `openai>=3.0.0` | **설치 실패** |
+    | **2.4.0** | `openai>=2.8.0` | **맞음** |
 
 ---
 
@@ -209,8 +217,8 @@ openai_client = project_client.get_openai_client()
 
 response = openai_client.responses.create(
     input=[{"role": "user", "content": "휴가 신청 어떻게 하나요?"}],
-    extra_body={"agent": {"name": agent.name,
-                          "type": "agent_reference"}})
+    extra_body={"agent_reference": {"name": agent.name,
+                                    "type": "agent_reference"}})
 
 print(response.output_text)
 ```
@@ -227,7 +235,7 @@ python call_agent.py
 | `AIProjectClient(...)` | **프로젝트**에 연결합니다 (모델이 아니라) |
 | `agents.get("hr-agent")` | 포털에서 만든 에이전트를 **가져옵니다** |
 | `get_openai_client()` | 프로젝트 인증을 **물려받은** OpenAI 클라이언트 |
-| `extra_body={"agent": ...}` | "이 요청은 **이 에이전트가** 처리해라" |
+| `extra_body={"agent_reference": ...}` | "이 요청은 **이 에이전트가** 처리해라" |
 
 !!! question "왜 `OpenAI(...)` 를 새로 안 만드나요"
     `get_openai_client()` 는 프로젝트의 인증을 그대로 물려받습니다.
@@ -283,12 +291,38 @@ python call_agent.py
     2. `PROJECT_ENDPOINT` 가 **프로젝트** 엔드포인트인지 확인 (리소스 것 아님)
     3. 에이전트가 **저장**되었는지 확인
 
+??? failure "ResolutionImpossible / conflicting dependencies — pip 이 설치를 거부합니다"
+    메시지 끝에 이렇게 나옵니다.
+
+    ```text
+    The conflict is caused by:
+        The user requested openai==2.46.0
+        azure-ai-projects 2.9.0 depends on openai>=3.0.0
+    ```
+
+    **`azure-ai-projects` 버전을 잘못 적은 것입니다.** 최신 버전(2.5.0 이상)은
+    `openai` 3.x 를 요구하는데, 우리 환경은 `openai==2.46.0` 입니다.
+
+    `requirements.txt` 의 그 줄을 **`azure-ai-projects==2.4.0`** 으로 고치고 다시 설치하세요.
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+    파일을 고치기 전에 바로 해결하려면 한 줄로도 됩니다.
+
+    ```bash
+    pip install "azure-ai-projects==2.4.0"
+    ```
+
+    **코드는 바뀌지 않습니다.** `agents.get()` · `get_openai_client()` · `extra_body` 모두 2.4.0 에 그대로 있습니다.
+
 ??? failure "ModuleNotFoundError: azure.ai.projects"
     ```bash
     pip install -r requirements.txt
     ```
     `(.venv)` 가 켜진 상태에서 실행했는지 확인하세요.
-    `requirements.txt` 에 `azure-ai-projects==2.9.0` 줄을 추가했는지도 보세요.
+    `requirements.txt` 에 `azure-ai-projects==2.4.0` 줄을 추가했는지도 보세요.
 
 ??? failure "권한 오류 (Forbidden / 403)"
     **키 인증과 ID 인증의 차이가 여기서 드러납니다.**
@@ -306,8 +340,22 @@ python call_agent.py
     3. 그래도 403 이면 **역할이 누락된 것입니다. 손을 드세요** —
        강사가 `Cognitive Services User` 를 부여하면 1~2분 뒤 됩니다
 
-??? failure "extra_body 에서 오류가 납니다"
-    SDK 버전 차이일 수 있습니다. 오류 메시지를 보고 손을 드세요.
+??? failure "400 invalid_payload — The 'agent' property is deprecated. Use 'agent_reference' instead"
+    예전 문법입니다. `extra_body` 의 **바깥쪽 키 이름만** 바꾸면 됩니다.
+
+    ```python
+    # 옛 문법 — 이제 400 이 납니다
+    extra_body={"agent": {"name": agent.name, "type": "agent_reference"}}
+
+    # 지금 문법
+    extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}}
+    ```
+
+    안쪽 `"type": "agent_reference"` 는 **그대로 둡니다.** 빼면
+    `Required property 'type' is missing` 로 역시 400 이 납니다.
+
+??? failure "extra_body 에서 그 밖의 오류가 납니다"
+    서비스 쪽 스키마가 바뀐 경우입니다. 오류 메시지의 `param` 값을 보고 손을 드세요.
     급하면 포털 플레이그라운드로 대체하고 넘어갑니다 — 개념은 동일합니다.
 
 ??? failure "az login 에서 브라우저가 안 열립니다"
