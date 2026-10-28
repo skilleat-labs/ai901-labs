@@ -33,6 +33,7 @@
 !!! success "★ Speech 리소스를 따로 만들지 마세요 — 지금 키 그대로입니다"
     Lab 01에서 만든 Foundry 리소스가 **Azure AI Services(멀티 서비스)** 라
     Speech 가 처음부터 들어 있습니다. 포털에서 뭔가 새로 만들 필요가 없습니다.
+    (포털의 **Microsoft Foundry** = 예전 이름 **Azure AI Services** = 리소스 종류 `AIServices`, 같은 것입니다.)
 
     키는 Lab 02부터 쓰던 **`API_KEY` 그대로**, 지역은 리소스를 만든 **`eastus2`** 입니다.
 

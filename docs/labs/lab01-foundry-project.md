@@ -129,6 +129,8 @@
 
 !!! success "★ 이 리소스 하나에 Language · Speech · Vision 이 다 들어 있습니다"
     방금 만든 Foundry 리소스는 **Azure AI Services(멀티 서비스) 리소스**입니다.
+    (포털 이름이 **Microsoft Foundry**, 예전 이름이 **Azure AI Services**, 리소스 종류로는 `AIServices` —
+    **셋 다 같은 것**입니다. 문서마다 다르게 적혀 있어 헷갈리는 지점입니다.)
     모델(gpt)만 쓰는 게 아니라 **전용 AI 서비스들이 처음부터 같이** 들어 있습니다.
 
     | 언제 | 무엇을 쓰나 | 그때 할 일 |
