@@ -142,8 +142,9 @@ python analyze_general.py
 
 ## 3. 전용 서비스는 무엇이 다른가 — 직접 돌려봅니다 (10분)
 
-!!! success "새 리소스도, 새 키도 필요 없습니다"
-    Lab 01에서 만든 Foundry 리소스가 **Language 도 같이 제공합니다.**
+!!! success "새 리소스도, 새 키도, 신청 절차도 없습니다"
+    Lab 01에서 만든 Foundry 리소스는 **Azure AI Services(멀티 서비스) 리소스**입니다.
+    Language · Speech · Vision 이 **처음부터 같이 들어 있습니다.** 따로 만들 게 없습니다.
     키는 지금 쓰는 `API_KEY` 그대로고, **주소만 다릅니다.**
 
     | | 주소 |
@@ -226,9 +227,12 @@ python analyze_language.py
     **"신뢰도 점수가 필요하다"** 가 문제에 나오면 → **전용 서비스**입니다.
     이게 3강에서 배운 "생성형 AI가 이전 AI를 대체하지 않는다"의 실체입니다.
 
-!!! tip "비용"
-    Azure AI Language 는 **월 5,000건까지 무료 한도**가 있습니다.
-    오늘 수업에서 쓰는 양은 한도 안에 들어갑니다.
+!!! tip "비용 — 종량제입니다"
+    우리 리소스는 **S0(종량제)** 라 무료 한도가 붙지 않습니다.
+    요금은 **텍스트 레코드 1,000건당 약 $1** 이고, **1건 = 1,000자 이하 한 덩어리**입니다.
+
+    오늘 리뷰는 100자 남짓이라 **한 번 호출 = 1건**입니다.
+    1인이 몇 번 돌려도 **1센트가 안 되고**, 교실 전체로도 10센트 수준입니다.
 
 ---
 
@@ -271,7 +275,14 @@ python analyze_language.py
     print(os.getenv("LANGUAGE_ENDPOINT"))
     ```
 
-    주소가 맞는데도 안 되면 리소스에 Language 기능이 없는 경우입니다. **손을 드세요.**
+    주소가 맞는데도 안 되면 **리소스 종류**를 보세요. Language 는 `AIServices` 리소스에만 들어 있습니다.
+
+    ```bash
+    az cognitiveservices account list -o table
+    ```
+
+    `Kind` 가 **`AIServices`** 면 정상입니다. `OpenAI` 로 되어 있으면 Azure OpenAI 전용으로
+    만들어진 것이라 Language 가 없습니다. **손을 드세요** — 강사가 확인해 드립니다.
 
 ??? failure "엔터티를 제대로 못 찾습니다"
     작은 모델의 한계입니다. 리뷰 문장을 더 명확하게 바꾸거나,
