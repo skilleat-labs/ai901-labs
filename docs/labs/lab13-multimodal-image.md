@@ -32,17 +32,52 @@ content=[
 
 ---
 
-## 1. 준비 — 이미지 한 장 (3분)
+## 1. 준비 — 이미지 내려받기 (3분)
 
-`ai901` 폴더에 이미지를 하나 넣습니다.
+실습용 이미지를 준비해 뒀습니다. **받아서 `ai901` 폴더에 넣으면 됩니다.**
 
-- 휴대폰 사진, 스크린샷, 아무거나 괜찮습니다
-- 파일명을 **`sample.png`** (또는 `.jpg`) 로 저장하세요
-- **1MB 이하**를 권합니다. 크면 느리고 토큰이 많이 듭니다
+<figure markdown>
+  ![AI-901 합격 기원](../assets/sample.png){ width="420" }
+  <figcaption>sample.png · 800 × 560 · 약 105KB</figcaption>
+</figure>
 
-!!! tip "글자가 들어간 이미지를 추천합니다"
-    영수증, 간판, 표지판 같은 걸 쓰면 모델이 글자까지 읽는 걸 볼 수 있습니다.
-    Lab 15(정보 추출)와도 자연스럽게 이어집니다.
+[↓ sample.png 내려받기](../assets/sample.png){ .md-button .md-button--primary download="sample.png" }
+
+### 받은 다음 — `ai901` 폴더로 옮깁니다
+
+=== "Windows"
+
+    ```powershell
+    # 보통 다운로드 폴더에 받아집니다
+    move "$env:USERPROFILE\Downloads\sample.png" .
+    dir sample.png
+    ```
+
+=== "macOS · Linux"
+
+    ```bash
+    mv ~/Downloads/sample.png .
+    ls -l sample.png
+    ```
+
+!!! warning "터미널 위치가 `ai901` 인지 먼저 확인하세요"
+    위 명령의 `.` 은 **지금 터미널이 있는 폴더**라는 뜻입니다.
+    `pwd` (Windows 는 `cd`) 를 쳐서 경로 끝이 `ai901` 인지 보세요.
+    `analyze_image.py` 와 **같은 폴더**에 있어야 합니다.
+
+!!! tip "이 이미지를 고른 이유 — 글자가 들어 있습니다"
+    아래 프롬프트가 "글자가 있으면 읽어줘" 입니다.
+    모델이 캐릭터를 **설명**하면서 「합격」 「AI-901 합격 기원」 까지 **읽어내는지** 보세요.
+    그림만 있는 사진으로는 이걸 확인할 수 없습니다.
+
+??? tip "내 사진을 쓰고 싶다면"
+    휴대폰 사진, 스크린샷 아무거나 괜찮습니다. 파일명만 **`sample.png`** 로 맞추세요.
+
+    - **1MB 이하**를 권합니다 — 크면 느리고 토큰이 많이 듭니다
+    - **글자가 있는 것**을 고르세요. 영수증·간판·표지판이 좋습니다
+    - JPG 를 쓰면 뒤에 나오는 `data:image/png;base64,` 를 `data:image/jpeg;base64,` 로 바꿔야 합니다
+
+    영수증을 쓰면 Lab 15(정보 추출)와 자연스럽게 이어집니다.
 
 ---
 
@@ -106,6 +141,17 @@ response = client.responses.create(
          "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg"}
     ]}])
 ```
+
+!!! tip "같은 이미지로 비교해 보고 싶다면"
+    방금 내려받은 `sample.png` 는 **실습 사이트에 그대로 올라가 있습니다.** 이 주소를 쓰면
+    **같은 이미지를 두 방법으로** 보낼 수 있습니다.
+
+    ```python
+    "image_url": "https://skilleat-labs.github.io/ai901-labs/assets/sample.png"
+    ```
+
+    base64 로 보낸 답과 **비슷하게 나오는지** 보세요. 전달 방법이 달라도
+    모델이 보는 이미지는 같습니다 — 그래서 답도 같은 내용이 나옵니다.
 
 !!! danger "★★ 여기가 시험 함정입니다"
     **`image_url` 이라는 필드는 하나뿐입니다.** 거기에

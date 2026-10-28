@@ -4,7 +4,7 @@
     **글자를 소리로**(TTS), **소리를 글자로**(STT) 바꿉니다.
     Azure Speech는 표준(S0) 가격에 **월 50만 자 무료 한도**가 포함돼 비용 부담이 거의 없습니다.
 
-**선행** [Lab 10](lab10-text-analysis.md) 완료 · **예상 시간** 22분 · **비용** 거의 0원 (무료 한도 내)
+**선행** [Lab 10](lab10-text-analysis.md) 완료 · **예상 시간** 27분 · **비용** 거의 0원 (무료 한도 내)
 
 !!! note "“무료 한도”는 구독 단위로 공유됩니다"
     월 50만 뉴럴 문자는 **구독 전체에 주어지는 한도**입니다. 1인당이 아닙니다.
@@ -145,14 +145,79 @@ python stt.py
 
 "말씀하세요"가 뜨면 **한 문장** 말해 보세요.
 
-!!! danger "★ `recognize_once` 는 한 문장만 듣습니다 — 시험 함정"
-    | | 무엇 |
-    |---|---|
-    | `recognize_once_async()` | **한 번의 발화**만 인식하고 끝 |
-    | 연속 인식 | 계속 듣습니다 (`start_continuous_recognition`) |
+한 문장 말하고 나면 **프로그램이 그냥 끝납니다.** 두 번째 문장은 안 받아적습니다.
+왜 그런지 다음 절에서 직접 확인합니다.
 
-    "회의 전체를 받아적어야 한다"에 `recognize_once` 를 고르면 **오답**입니다.
-    긴 녹음은 **일괄 처리(batch transcription)** 를 씁니다.
+---
+
+## 3-B. 연속 인식 — 계속 듣게 만듭니다 (5분)
+
+!!! info "이 절을 따로 만든 이유"
+    `recognize_once` 와 연속 인식의 차이는 **시험 주관식에 나옵니다.**
+    설명만 읽고 넘어가면 시험장에서 헷갈립니다. **두 개를 다 돌려보면 안 헷갈립니다.**
+
+`stt_cont.py` 를 만듭니다.
+
+```python
+import os, time
+from dotenv import load_dotenv
+import azure.cognitiveservices.speech as speechsdk
+
+load_dotenv()
+
+speech_config = speechsdk.SpeechConfig(
+    subscription=os.getenv("SPEECH_KEY"),
+    region=os.getenv("SPEECH_REGION"))
+speech_config.speech_recognition_language = "ko-KR"
+
+recognizer = speechsdk.SpeechRecognizer(
+    speech_config=speech_config,
+    audio_config=speechsdk.audio.AudioConfig(use_default_microphone=True))
+
+# ① 한 문장이 확정될 때마다 불립니다
+recognizer.recognized.connect(
+    lambda evt: print("인식:", evt.result.text))
+
+# ② 말하는 도중에도 계속 불립니다 (중간 결과)
+recognizer.recognizing.connect(
+    lambda evt: print("  ...", evt.result.text, end="\r"))
+
+print("계속 듣습니다. 여러 문장 말해 보세요 (15초).")
+recognizer.start_continuous_recognition()   # ③ 돌려놓고 바로 다음 줄로 갑니다
+time.sleep(15)                              # ④ 그동안 계속 듣습니다
+recognizer.stop_continuous_recognition()    # ⑤ 직접 멈춰야 끝납니다
+print("\n끝.")
+```
+
+```bash
+python stt_cont.py
+```
+
+**15초 동안 서너 문장을 끊어서** 말해 보세요. 문장마다 `인식:` 이 한 줄씩 찍힙니다.
+
+### 무엇이 달라졌나
+
+| | `recognize_once_async()` | `start_continuous_recognition()` |
+|---|---|---|
+| 몇 문장 | **한 번의 발화**만 | 멈출 때까지 **계속** |
+| 결과를 받는 법 | `.get()` 의 **반환값** | `recognized` **이벤트 콜백** |
+| 멈추는 법 | 알아서 끝남 | **`stop_...()` 을 직접 불러야** |
+| 쓰는 곳 | 키오스크 · 음성 검색 · 짧은 명령 | 회의록 · 콜센터 전사 · 자막 |
+
+!!! note "★ `start_continuous_recognition()` 은 **기다려 주지 않습니다**"
+    이 줄은 "듣기를 시작해라"라고 **시켜만 놓고 바로 다음 줄로 넘어갑니다.**
+    그래서 `time.sleep(15)` 로 프로그램을 **살려둬야** 합니다.
+    이게 없으면 시작하자마자 프로그램이 끝나서 **아무것도 안 들립니다.**
+
+!!! danger "★★ 시험은 세 갈래 중에 고르게 합니다"
+    | 상황 | 답 |
+    |---|---|
+    | 키오스크에서 **짧은 문장** 하나 듣고 다음 단계로 | `recognize_once_async()` |
+    | 마이크에서 **지속적으로** 인식 · 실시간 자막 | **연속 인식** (실시간 음성 텍스트 변환) |
+    | 저장된 **녹음 파일 1,000건**을 분석 | **일괄 처리 (batch transcription)** |
+
+    가장 흔한 함정은 **세 번째입니다.** 긴 녹음에 `recognize_once` 나 연속 인식을 고르면 오답입니다.
+    문제에 "**실시간**"이 있으면 일괄 처리가 오답, "**대용량·저장된 파일**"이면 일괄 처리가 정답입니다.
 
 ---
 
@@ -162,7 +227,9 @@ python stt.py
     - [ ] `tts.py` 에서 **소리가 났다**
     - [ ] 목소리를 바꿔 봤다
     - [ ] `stt.py` 가 내 말을 **글자로** 받아적었다
+    - [ ] `stt_cont.py` 로 **여러 문장을 연속으로** 받아적었다
     - [ ] `recognize_once` 와 연속 인식의 차이를 말할 수 있다
+    - [ ] 짧은 명령 / 실시간 연속 / 대용량 일괄 **세 갈래를 구분**할 수 있다
 
 ---
 
