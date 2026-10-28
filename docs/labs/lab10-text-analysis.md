@@ -258,13 +258,22 @@ python analyze_language.py
     | `Language service` · 표준 S0 | **차단됨** (구독 기능 제한) |
     | **`Azure AI Services` · S0** | **됩니다** ← 이걸로 만듭니다 |
 
-    그리고 `Azure AI Services` 로 만들면 Language 뿐 아니라 Speech · Vision 도 함께 들어옵니다.
-    Lab 01에서 만든 것과 **같은 종류**입니다.
+    그리고 `Azure AI Services`(= 포털의 **Microsoft Foundry**) 로 만들면
+    Language 뿐 아니라 Speech · Vision 도 함께 들어옵니다. Lab 01에서 만든 것과 **같은 종류**입니다.
+
+    **그래서 이 과정에서 따로 만들 서비스가 사실상 없습니다.** Foundry 리소스 하나가 전부입니다.
 
 ### ① 포털에서 만들기 (3분)
 
 1. [portal.azure.com](https://portal.azure.com) → **리소스 만들기**
-2. 검색창에 **`Azure AI Services`** → 결과에서 선택 → **만들기**
+2. 검색창에 **`Azure AI Services`** 를 칩니다.
+   결과에 **「Microsoft Foundry」** 가 나오는데 **그게 맞습니다.** 그걸 선택 → **만들기**
+
+    !!! note "이름이 통합됐습니다 — Azure AI Services = Microsoft Foundry"
+        예전 이름이 **Azure AI Services(멀티 서비스)**, 지금 포털 이름이 **Microsoft Foundry** 입니다.
+        검색어로 `Azure AI Services` 를 쳐도 Foundry 가 나오는 이유입니다.
+        **Lab 01에서 만든 것과 같은 종류**입니다 (리소스 종류로는 `AIServices`).
+
 3. 값을 채웁니다.
 
     | 칸 | 넣을 값 |
@@ -275,8 +284,9 @@ python analyze_language.py
     | 이름 | `lang-ai901-<번호>` |
     | 가격 책정 계층 | **Standard S0** |
 
-4. **책임 있는 AI 고지** 동의 체크가 있으면 체크합니다
-5. **검토 + 만들기** → **만들기**. **1~2분** 걸립니다
+4. **프로젝트 이름** 칸이 같이 나오면 기본값 그대로 둡니다 (Lab 01과 같은 화면입니다)
+5. **책임 있는 AI 고지** 동의 체크가 있으면 체크합니다
+6. **검토 + 만들기** → **만들기**. **1~2분** 걸립니다
 
 ### ② 키와 엔드포인트 복사 (2분)
 
