@@ -148,13 +148,36 @@ azure-ai-contentunderstanding==1.1.0
     SDK 패키지와 메서드 이름이 버전에 따라 달라서, **구조만** 봅니다.
     시험이 묻는 것도 "흐름"이지 정확한 메서드명이 아닙니다.
 
+### endpoint URL은 어디서 복사하나요?
+
+1. [Azure Portal](https://portal.azure.com)에서 **Content Understanding에 연결한 Foundry 리소스**를 엽니다. 프로젝트가 아니라 **부모 리소스**입니다.
+2. 왼쪽 메뉴의 **리소스 관리(Resource Management) → 키 및 엔드포인트(Keys and Endpoint)** 를 엽니다.
+3. **엔드포인트(Endpoint)** 값을 복사합니다. 아래 주소는 형식 예시이므로 자신의 리소스 값을 그대로 쓰세요.
+
+```text
+https://<내-리소스-이름>.services.ai.azure.com/
+```
+
+리소스에 따라 `https://<내-리소스-이름>.cognitiveservices.azure.com/` 형태가 표시될 수도 있습니다. 도메인을 임의로 바꾸지 말고 **포털에 표시된 실제 값**을 사용합니다.
+
+!!! warning "주소 세 가지를 구분하세요"
+    - `https://contentunderstanding.ai.azure.com/` 는 **Studio 웹사이트 주소**입니다. 코드의 endpoint가 아닙니다.
+    - `/api/projects/<프로젝트명>` 이 포함된 **프로젝트 엔드포인트**도 이 클라이언트에 넣지 않습니다.
+    - 이 코드에는 **리소스 엔드포인트**를 넣습니다. `/contentunderstanding/...` 나 `?api-version=...` 경로를 직접 덧붙이지 않습니다.
+
+아래 구조 예시의 `endpoint`에는 복사한 주소를 먼저 대입합니다. `receipt-analyzer`도 예시 ID이므로 실제로 만든 분석기 ID와 일치시켜야 합니다. 이 코드는 **Entra ID 인증**을 쓰므로 키를 붙여 넣는 대신 실행 신원과 필요한 역할을 준비합니다.
+
+[공식 엔드포인트 확인 안내](https://microsoftlearning.github.io/mslearn-ai-information-extraction/Instructions/Exercises/02-content-understanding-api.html#prepare-the-development-environment)
+
 ```python
 # extract.py — 구조
 from azure.ai.contentunderstanding import ContentUnderstandingClient
 from azure.identity import DefaultAzureCredential
 
-# 1. 클라이언트 생성
-client = ContentUnderstandingClient(endpoint, DefaultAzureCredential())
+# 1. 포털에서 복사한 리소스 엔드포인트로 클라이언트 생성
+endpoint = "https://YOUR-RESOURCE-NAME.services.ai.azure.com/"  # 자신의 실제 값으로 교체
+client = ContentUnderstandingClient(
+    endpoint=endpoint, credential=DefaultAzureCredential())
 
 # 2. 분석 작업 제출 — 로컬 파일은 _binary 쪽
 with open("receipt.png", "rb") as f:
