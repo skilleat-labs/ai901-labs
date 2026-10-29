@@ -1,0 +1,2058 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Microsoft Foundry로 직접 만들어 보는 AI-901 4일 hands-on 랩">
+      
+      
+      
+        <link rel="canonical" href="https://skilleat-labs.github.io/ai901-labs/labs/lab10-text-analysis/">
+      
+      
+        <link rel="prev" href="../lab09-agent-code/">
+      
+      
+        <link rel="next" href="../lab11-speech/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Lab 10 — 텍스트 분석 두 가지 방법 - AI-901 실습 랩</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-10" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="AI-901 실습 랩" class="md-header__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-901 실습 랩
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 10 — 텍스트 분석 두 가지 방법
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-901 실습 랩" class="md-nav__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-901 실습 랩
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수업 전 설치
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1일차 — 개념과 환경
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1일차 — 개념과 환경
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab00-subscription/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 00 — 내 실습 환경 확인
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab01-foundry-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 01 — Foundry 리소스와 프로젝트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab02-first-call/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 02 — 키·Python 환경·첫 연결
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2일차 — 모델과 프롬프트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2일차 — 모델과 프롬프트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab03-deploy-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 03 — 모델 배포 제대로 하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 — 첫 호출 확장과 토큰
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab05-chat-memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 05 — 대화를 기억하는 챗봇
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 — 매개변수 실험
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab07-system-grounding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 — 시스템 메시지와 근거 기반 답변
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3일차 — 에이전트와 언어
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3일차 — 에이전트와 언어
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-agent-portal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 — 포털에서 에이전트 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab09-agent-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09 — 코드에서 에이전트 호출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 10 — 텍스트 분석 두 가지 방법
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 10 — 텍스트 분석 두 가지 방법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 두 가지 길이 있습니다 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-analyze_generalpy-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. analyze_general.py (15분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. analyze_general.py (15분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        나오는 결과 — 예시
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 약점을 직접 확인하세요 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 전용 서비스는 무엇이 다른가 — 직접 돌려봅니다 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 전용 서비스는 무엇이 다른가 — 직접 돌려봅니다 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        나오는 결과
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 전용 리소스를 직접 만들어 호출합니다 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 전용 리소스를 직접 만들어 호출합니다 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ① 포털에서 만들기 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ② 키와 엔드포인트 복사 (2분)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ③ 같은 코드를 그대로 돌립니다 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ④ 확인했으면 바로 지웁니다 (2분)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab11-speech/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 11 — 음성 인식과 합성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab12-voice-live-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 12 — Voice Live (강사 데모)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4일차 — 비전·추출과 시험
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4일차 — 비전·추출과 시험
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab13-multimodal-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13 — 멀티모달 이미지 분석
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab14-image-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 14 — 이미지 생성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab15-content-understanding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15 — Content Understanding 추출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab16-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 16 — 리소스 전체 정리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 두 가지 길이 있습니다 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-analyze_generalpy-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. analyze_general.py (15분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. analyze_general.py (15분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        나오는 결과 — 예시
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 약점을 직접 확인하세요 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 전용 서비스는 무엇이 다른가 — 직접 돌려봅니다 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 전용 서비스는 무엇이 다른가 — 직접 돌려봅니다 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        나오는 결과
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 전용 리소스를 직접 만들어 호출합니다 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 전용 리소스를 직접 만들어 호출합니다 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ① 포털에서 만들기 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ② 키와 엔드포인트 복사 (2분)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ③ 같은 코드를 그대로 돌립니다 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ④ 확인했으면 바로 지웁니다 (2분)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-10">Lab 10 — 텍스트 분석 두 가지 방법</h1>
+<div class="admonition info">
+<p class="admonition-title">이 실습에서 하는 것</p>
+<p>고객 리뷰에서 <strong>감정 · 엔터티 · 키 구문 · 요약</strong>을 뽑습니다.
+그리고 <strong>범용 모델</strong>과 <strong>전용 서비스</strong> 중 무엇을 쓸지 판단하는 기준을 잡습니다.</p>
+</div>
+<p><strong>선행</strong> <a href="../lab04-tokens/">Lab 04</a> 완료 · <strong>예상 시간</strong> 45분 · <strong>비용</strong> 약 $0.03 미만</p>
+<hr />
+<h2 id="0-5">0. 두 가지 길이 있습니다 (5분)</h2>
+<div class="admonition note">
+<p class="admonition-title">★★ 10강의 핵심이자 시험 최다 출제 지점</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>범용 모델 (gpt-5.4-mini)</th>
+<th>전용 서비스 (Azure Language)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>방식</td>
+<td><strong>프롬프트로 시킨다</strong></td>
+<td><strong>메서드를 호출한다</strong></td>
+</tr>
+<tr>
+<td>반환</td>
+<td>자유 텍스트 (형식 요청 가능)</td>
+<td><strong>구조화된 결과 + 신뢰도 점수</strong></td>
+</tr>
+<tr>
+<td>장점</td>
+<td>유연함 · 여러 작업을 한 번에</td>
+<td>일관된 형식 · 점수 · 저렴</td>
+</tr>
+<tr>
+<td>단점</td>
+<td>형식이 흔들릴 수 있음</td>
+<td>정해진 작업만</td>
+</tr>
+</tbody>
+</table>
+<p><strong>판단 기준</strong> — "시스템이 쓸 거면 전용 서비스"로 외우면 <strong>틀립니다.</strong>
+범용 모델도 JSON 을 뱉게 할 수 있습니다 (이 랩에서 바로 그걸 합니다).</p>
+<p>진짜 갈림길은 네 가지입니다.</p>
+<table>
+<thead>
+<tr>
+<th>이런 조건이면</th>
+<th>고를 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>신뢰도 점수(confidence score)</strong> 가 필요하다</td>
+<td><strong>전용 서비스</strong></td>
+</tr>
+<tr>
+<td>스키마가 <strong>절대 흔들리면 안 된다</strong> (계약된 형식)</td>
+<td><strong>전용 서비스</strong></td>
+</tr>
+<tr>
+<td>대량 처리라 <strong>단가·지연</strong>이 중요하다</td>
+<td><strong>전용 서비스</strong></td>
+</tr>
+<tr>
+<td>작업이 <strong>정해진 목록에 없다</strong> (요약 + 번역 + 분류를 한 번에 등)</td>
+<td><strong>범용 모델</strong></td>
+</tr>
+</tbody>
+</table>
+<p>한 줄로 줄이면 — <strong>정해진 작업을 확실하게</strong>는 전용 서비스,
+<strong>정해지지 않은 작업을 유연하게</strong>는 범용 모델입니다.</p>
+</div>
+<p>오늘은 <strong>범용 모델</strong>로 직접 만들고, 전용 서비스는 차이를 눈으로 비교합니다.</p>
+<hr />
+<h2 id="1-analyze_generalpy-15">1. <code>analyze_general.py</code> (15분)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">load_dotenv</span><span class="p">()</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">base_url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"AZURE_OPENAI_ENDPOINT"</span><span class="p">),</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"API_KEY"</span><span class="p">))</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">review</span> <span class="o">=</span> <span class="s2">"""지난주에 강남점에서 산 무선 이어폰인데요,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s2">음질은 생각보다 훨씬 좋았습니다. 다만 배송이 5일이나 걸려서 답답했고</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s2">포장도 좀 허술했어요. 김민수 매니저님이 친절하게 응대해 주신 건 좋았습니다."""</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""다음 고객 리뷰를 분석해서 JSON으로만 답해라.</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="se">{{</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s2">  "감정": "긍정 | 부정 | 중립",</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s2">  "엔터티": ["사람·장소·조직·제품"],</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s2">  "키구문": ["핵심 주제어 3개"],</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s2">  "요약": "한 문장"</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="se">}}</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="s2">리뷰:</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="si">{</span><span class="n">review</span><span class="si">}</span><span class="s2">"""</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">message</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MODEL_DEPLOYMENT_NAME"</span><span class="p">),</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="nb">input</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">output_text</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>analyze_general.py
+</code></pre></div>
+<h3 id="_1">나오는 결과 — 예시</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"감정"</span><span class="p">:</span><span class="w"> </span><span class="s2">"부정"</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"엔터티"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"강남점"</span><span class="p">,</span><span class="w"> </span><span class="s2">"무선 이어폰"</span><span class="p">,</span><span class="w"> </span><span class="s2">"김민수 매니저"</span><span class="p">],</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">"키구문"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"음질"</span><span class="p">,</span><span class="w"> </span><span class="s2">"배송 지연"</span><span class="p">,</span><span class="w"> </span><span class="s2">"포장 허술"</span><span class="p">],</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">"요약"</span><span class="p">:</span><span class="w"> </span><span class="s2">"음질과 응대는 좋았지만 배송이 늦고 포장이 허술해 전반적으로 부정적인 리뷰다."</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">★ 감정이 부정으로 나와도, 중립으로 나와도 맞습니다</p>
+<p>옆 사람과 값이 다를 겁니다. <strong>틀린 게 아니라 이 랩의 핵심입니다.</strong></p>
+<p>이 리뷰에는 좋은 점(음질·응대)과 나쁜 점(배송·포장)이 <strong>둘 다</strong> 있습니다.
+그런데 우리가 준 선택지는 <code>긍정 | 부정 | 중립</code> 셋뿐입니다.
+<strong>"혼합"이라는 칸이 없으니 모델이 셋 중 하나를 고를 수밖에 없습니다.</strong>
+나쁜 점을 더 무겁게 보면 <code>"부정"</code>, 둘이 상쇄된다고 보면 <code>"중립"</code> 입니다.</p>
+<p>같은 리뷰를 <strong>전용 서비스</strong>에 넣으면 <code>mixed</code> 라고 답합니다. 3절에서 확인합니다.
+엔터티나 키구문도 개수·표기가 조금씩 다를 수 있습니다 (<code>김민수</code> vs <code>김민수 매니저</code>).</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">네 가지 작업을 한 번에 했습니다</p>
+<p>전용 서비스였다면 <strong>감정 분석 · 엔터티 인식 · 키 구문 추출 · 요약</strong>을
+각각 따로 호출해야 합니다. 범용 모델의 장점이 이겁니다.</p>
+</div>
+<hr />
+<h2 id="2-5">2. 약점을 직접 확인하세요 (5분)</h2>
+<p>같은 코드를 <strong>3번 더</strong> 돌리고, <strong>세 결과를 나란히 놓고</strong> 보세요.
+무엇이 같고 무엇이 달라지는지가 핵심입니다.</p>
+<table>
+<thead>
+<tr>
+<th>보는 곳</th>
+<th>대개 이렇게 됩니다</th>
+<th>그래서 뭐가 문제인가</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>감정 · 엔터티</td>
+<td>대체로 <strong>같게</strong> 나옵니다</td>
+<td>판정 자체는 꽤 안정적입니다</td>
+</tr>
+<tr>
+<td><strong>키구문</strong></td>
+<td><code>"포장 허술"</code> → <code>"포장 상태"</code> 처럼 <strong>표기가 바뀝니다</strong></td>
+<td>같은 뜻인데 문자열이 달라 <strong>집계가 안 됩니다</strong></td>
+</tr>
+<tr>
+<td><strong>요약</strong></td>
+<td><strong>매번 다른 문장</strong>이 나옵니다</td>
+<td>생성이라 표현이 고정되지 않습니다</td>
+</tr>
+<tr>
+<td><strong>신뢰도 점수</strong></td>
+<td><strong>아예 없습니다</strong></td>
+<td>이 판정을 얼마나 믿을지 알 수 없습니다</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition question">
+<p class="admonition-title">세 번 다 비슷하게 나왔는데요?</p>
+<p>그게 정상입니다. <strong>크게 흔들리는 걸 보라는 게 아닙니다.</strong>
+같은 입력인데 <strong>요약 문장과 키구문 표기가 매번 조금씩 달라진다</strong>는 것, 그거면 충분합니다.</p>
+<p>리뷰 1,000건을 이 코드로 돌려 "포장" 관련 불만을 세야 한다고 해보세요.
+<code>포장 허술</code> · <code>포장 상태</code> · <code>포장</code> 이 섞여 나오면 <strong>숫자를 못 셉니다.</strong>
+전용 서비스는 같은 입력에 <strong>같은 라벨과 같은 점수</strong>를 줍니다. 그 차이가 선택의 기준입니다.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">여기가 범용 모델의 한계입니다</p>
+<ul>
+<li><strong>표현이 고정되지 않습니다</strong> → 결과를 모아서 집계·비교하기 어렵습니다</li>
+<li>가끔 JSON 앞뒤에 설명이 붙습니다 → 파싱이 깨집니다</li>
+<li><strong>신뢰도 점수가 없습니다</strong> → "이 감정 판정을 얼마나 믿을 수 있나"를 알 수 없습니다</li>
+</ul>
+<p>온도를 <strong>0</strong>으로 낮추면 많이 안정됩니다 — 다만 <strong>보장은 아닙니다.</strong> (<a href="../lab06-parameters/">Lab 06</a>)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">message</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MODEL_DEPLOYMENT_NAME"</span><span class="p">),</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">input</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<hr />
+<h2 id="3-10">3. 전용 서비스는 무엇이 다른가 — 직접 돌려봅니다 (10분)</h2>
+<div class="admonition success">
+<p class="admonition-title">새 리소스도, 새 키도, 신청 절차도 없습니다</p>
+<p>Lab 01에서 만든 Foundry 리소스는 <strong>Azure AI Services(멀티 서비스) 리소스</strong>입니다.
+포털 어딘가에 "Language 신청" 버튼이 있는 게 아니라, <strong>리소스를 만든 순간 이미 들어 있습니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th>리소스 하나에 들어 있는 것</th>
+<th>쓰는 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>모델 (gpt)</td>
+<td>Lab 02~09</td>
+</tr>
+<tr>
+<td><strong>Language</strong> — 감정 · 엔터티 · 키구문 · PII</td>
+<td><strong>지금</strong></td>
+</tr>
+<tr>
+<td><strong>Speech</strong> — STT · TTS</td>
+<td>Lab 11</td>
+</tr>
+<tr>
+<td><strong>Vision · 문서 이해</strong></td>
+<td>Lab 13~15</td>
+</tr>
+</tbody>
+</table>
+<p>키는 지금 쓰는 <code>API_KEY</code> 그대로고, <strong>주소만 다릅니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>주소</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>모델 호출 (Lab 04~)</td>
+<td><code>https://&lt;리소스명&gt;.openai.azure.com/openai/v1</code></td>
+</tr>
+<tr>
+<td><strong>Language 호출 (지금)</strong></td>
+<td><code>https://&lt;리소스명&gt;.cognitiveservices.azure.com/</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>패키지를 설치합니다.</p>
+<div class="highlight"><span class="filename">requirements.txt 에 추가</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">azure-ai-textanalytics</span><span class="o">=</span><span class="s">=5.4.0</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</code></pre></div>
+<p><code>.env</code> 에 <strong>한 줄 추가</strong>합니다. <code>&lt;리소스명&gt;</code> 은 지금 쓰는 엔드포인트 주소에서 그대로 가져오세요.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="na">LANGUAGE_ENDPOINT</span><span class="o">=</span><span class="s">https://&lt;리소스명&gt;.cognitiveservices.azure.com/</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">analyze_language.py</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.core.credentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">AzureKeyCredential</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.textanalytics</span><span class="w"> </span><span class="kn">import</span> <span class="n">TextAnalyticsClient</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">load_dotenv</span><span class="p">()</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">client</span> <span class="o">=</span> <span class="n">TextAnalyticsClient</span><span class="p">(</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">endpoint</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LANGUAGE_ENDPOINT"</span><span class="p">),</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="n">credential</span><span class="o">=</span><span class="n">AzureKeyCredential</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"API_KEY"</span><span class="p">)))</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">review</span> <span class="o">=</span> <span class="s2">"""지난주에 강남점에서 산 무선 이어폰인데요,</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s2">음질은 생각보다 훨씬 좋았습니다. 다만 배송이 5일이나 걸려서 답답했고</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s2">포장도 좀 허술했어요. 김민수 매니저님이 친절하게 응대해 주신 건 좋았습니다."""</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">analyze_sentiment</span><span class="p">(</span><span class="n">documents</span><span class="o">=</span><span class="p">[</span><span class="n">review</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"문서 전체:"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sentiment</span><span class="p">)</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"  긍정"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">confidence_scores</span><span class="o">.</span><span class="n">positive</span><span class="p">,</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>      <span class="s2">"/ 중립"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">confidence_scores</span><span class="o">.</span><span class="n">neutral</span><span class="p">,</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>      <span class="s2">"/ 부정"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">confidence_scores</span><span class="o">.</span><span class="n">negative</span><span class="p">)</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">sentences</span><span class="p">:</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  [</span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">sentiment</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>analyze_language.py
+</code></pre></div>
+<h3 id="_2">나오는 결과</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>문서 전체: mixed
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  긍정 0.65 / 중립 0.03 / 부정 0.32
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  [positive] 지난주에 강남점에서 산 무선 이어폰인데요, 음질은 생각보다 훨씬 좋았습니다.
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  [negative] 다만 배송이 5일이나 걸려서 답답했고 포장도 좀 허술했어요.
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  [positive] 김민수 매니저님이 친절하게 응대해 주신 건 좋았습니다.
+</code></pre></div>
+<div class="admonition question">
+<p class="admonition-title">★ 2절에서 본 것과 비교하세요</p>
+<p>범용 모델은 <code>긍정 | 부정 | 중립</code> 중 하나를 <strong>골라야</strong> 했습니다. 그래서 <code>"부정"</code> 이 나왔죠.
+전용 서비스는 <strong><code>mixed</code></strong> 라고 답합니다. 혼합을 혼합이라고 말할 수 있습니다.</p>
+<p>거기에 <strong>점수</strong>가 붙고, <strong>문장별로</strong> 어디가 긍정이고 어디가 부정인지까지 나눠 줍니다.
+그리고 <strong>몇 번을 돌려도 같은 값</strong>입니다. 2절에서 요약 문장이 매번 달라지던 것과 반대입니다.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">★ 반환값의 차이가 시험에 나옵니다</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>범용 모델</th>
+<th>전용 서비스</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>감정</td>
+<td><code>"부정"</code> · <code>"중립"</code> — 셋 중 하나를 고른 문자열</td>
+<td><strong><code>mixed</code></strong> — 혼합을 혼합이라고 답한다</td>
+</tr>
+<tr>
+<td>신뢰도</td>
+<td><strong>없다</strong></td>
+<td><code>confidence_scores</code> (0.65 / 0.03 / 0.32)</td>
+</tr>
+<tr>
+<td>세분화</td>
+<td>문서 하나에 값 하나</td>
+<td><strong>문장별 감정</strong>까지</td>
+</tr>
+<tr>
+<td>형식</td>
+<td>요청한 대로 (표현이 흔들림)</td>
+<td><strong>항상 같은 객체 · 같은 값</strong></td>
+</tr>
+<tr>
+<td>할 수 있는 것</td>
+<td>요약·번역·분류를 <strong>한 번에</strong></td>
+<td>감정 하나만, 대신 <strong>확실하게</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>"신뢰도 점수가 필요하다"</strong> 가 문제에 나오면 → <strong>전용 서비스</strong>입니다.
+이게 3강에서 배운 "생성형 AI가 이전 AI를 대체하지 않는다"의 실체입니다.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">비용 — 종량제입니다</p>
+<p>우리 리소스는 <strong>S0(종량제)</strong> 라 무료 한도가 붙지 않습니다.
+요금은 <strong>텍스트 레코드 1,000건당 약 $1</strong> 이고, <strong>1건 = 1,000자 이하 한 덩어리</strong>입니다.</p>
+<p>오늘 리뷰는 100자 남짓이라 <strong>한 번 호출 = 1건</strong>입니다.
+1인이 몇 번 돌려도 <strong>1센트가 안 되고</strong>, 교실 전체로도 10센트 수준입니다.</p>
+</div>
+<hr />
+<h2 id="4-10">4. 전용 리소스를 직접 만들어 호출합니다 (10분)</h2>
+<p>3절은 <strong>이미 있는 리소스</strong>로 호출했습니다. 이번에는 <strong>내가 하나 더 만들어서</strong> 같은 코드를 돌립니다.
+실무에서는 Language 만 쓰는 팀이 <strong>전용 리소스를 따로 두는</strong> 경우가 많습니다.</p>
+<div class="admonition warning">
+<p class="admonition-title">★ 만들 때 고르는 종류가 중요합니다 — <code>Language service</code> 가 아니라 <code>Azure AI Services</code></p>
+<p>포털에 <strong>Language service</strong> 라는 항목이 따로 있습니다. 그런데 교육용 구독에서는 이게 막힙니다.</p>
+<table>
+<thead>
+<tr>
+<th>만들려는 것</th>
+<th>교육용 구독에서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Language service</code> · 무료 F0</td>
+<td><strong>구독당 딱 1개</strong> — 전원이 못 만듭니다</td>
+</tr>
+<tr>
+<td><code>Language service</code> · 표준 S0</td>
+<td><strong>차단됨</strong> (구독 기능 제한)</td>
+</tr>
+<tr>
+<td><strong><code>Azure AI Services</code> · S0</strong></td>
+<td><strong>됩니다</strong> ← 이걸로 만듭니다</td>
+</tr>
+</tbody>
+</table>
+<p>그리고 <code>Azure AI Services</code>(= 포털의 <strong>Microsoft Foundry</strong>) 로 만들면
+Language 뿐 아니라 Speech · Vision 도 함께 들어옵니다. Lab 01에서 만든 것과 <strong>같은 종류</strong>입니다.</p>
+<p><strong>그래서 이 과정에서 따로 만들 서비스가 사실상 없습니다.</strong> Foundry 리소스 하나가 전부입니다.</p>
+</div>
+<h3 id="1-3">① 포털에서 만들기 (3분)</h3>
+<ol>
+<li><a href="https://portal.azure.com">portal.azure.com</a> → <strong>리소스 만들기</strong></li>
+<li>
+<p>검색창에 <strong><code>Azure AI Services</code></strong> 를 칩니다.
+   결과에 <strong>「Microsoft Foundry」</strong> 가 나오는데 <strong>그게 맞습니다.</strong> 그걸 선택 → <strong>만들기</strong></p>
+<div class="admonition note">
+<p class="admonition-title">이름이 통합됐습니다 — Azure AI Services = Microsoft Foundry</p>
+<p>예전 이름이 <strong>Azure AI Services(멀티 서비스)</strong>, 지금 포털 이름이 <strong>Microsoft Foundry</strong> 입니다.
+검색어로 <code>Azure AI Services</code> 를 쳐도 Foundry 가 나오는 이유입니다.
+<strong>Lab 01에서 만든 것과 같은 종류</strong>입니다 (리소스 종류로는 <code>AIServices</code>).</p>
+</div>
+</li>
+<li>
+<p>값을 채웁니다.</p>
+<table>
+<thead>
+<tr>
+<th>칸</th>
+<th>넣을 값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구독</td>
+<td>그대로</td>
+</tr>
+<tr>
+<td>리소스 그룹</td>
+<td><strong>내 그룹</strong> <code>rg-ai901-&lt;번호&gt;</code></td>
+</tr>
+<tr>
+<td>지역</td>
+<td><strong>East US 2</strong></td>
+</tr>
+<tr>
+<td>이름</td>
+<td><code>lang-ai901-&lt;번호&gt;</code></td>
+</tr>
+<tr>
+<td>가격 책정 계층</td>
+<td><strong>Standard S0</strong></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>프로젝트 이름</strong> 칸이 같이 나오면 기본값 그대로 둡니다 (Lab 01과 같은 화면입니다)</p>
+</li>
+<li><strong>책임 있는 AI 고지</strong> 동의 체크가 있으면 체크합니다</li>
+<li><strong>검토 + 만들기</strong> → <strong>만들기</strong>. <strong>1~2분</strong> 걸립니다</li>
+</ol>
+<h3 id="2-2">② 키와 엔드포인트 복사 (2분)</h3>
+<ol>
+<li>만들어진 리소스로 이동 → 왼쪽 <strong>키 및 엔드포인트</strong></li>
+<li><strong>키 1</strong> 과 <strong>엔드포인트</strong>를 복사합니다</li>
+</ol>
+<p><code>.env</code> 에 두 줄을 <strong>추가</strong>합니다. 기존 값은 지우지 마세요.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="na">LANGUAGE_ENDPOINT2</span><span class="o">=</span><span class="s">https://lang-ai901-&lt;번호&gt;.cognitiveservices.azure.com/</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="na">LANGUAGE_KEY2</span><span class="o">=</span><span class="s">복사한_키1</span>
+</code></pre></div>
+<h3 id="3-3">③ 같은 코드를 그대로 돌립니다 (3분)</h3>
+<p><code>analyze_language.py</code> 에서 <strong>두 줄만</strong> 바꿉니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">client</span> <span class="o">=</span> <span class="n">TextAnalyticsClient</span><span class="p">(</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">endpoint</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LANGUAGE_ENDPOINT2"</span><span class="p">),</span>      <span class="c1"># ← 2 를 붙였습니다</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">credential</span><span class="o">=</span><span class="n">AzureKeyCredential</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LANGUAGE_KEY2"</span><span class="p">)))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>analyze_language.py
+</code></pre></div>
+<div class="admonition success">
+<p class="admonition-title">결과가 3절과 똑같이 나옵니다</p>
+<p><code>mixed</code> · 긍정 0.65 / 중립 0.03 / 부정 0.32 · 문장별 감정. <strong>코드는 한 줄도 안 바뀌었습니다.</strong></p>
+<p>바뀐 건 <strong>어느 리소스로 가느냐</strong>뿐입니다.
+Lab 01에서 "리소스는 결제 · 지역 · 할당량의 단위"라고 했죠. 그게 이겁니다.
+<strong>키와 엔드포인트가 곧 "어느 리소스로 보낼지"를 정합니다.</strong></p>
+</div>
+<h3 id="4-2">④ 확인했으면 바로 지웁니다 (2분)</h3>
+<p>확인이 끝난 리소스는 <strong>그 자리에서 지웁니다.</strong> 4일차까지 미루지 마세요.
+AI Services 는 쓰지 않으면 과금이 없지만, <strong>만들었으면 지운다</strong>를 몸에 붙이는 게 이 절의 또 다른 목적입니다.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">포털에서</label><label for="__tabbed_1_2">명령으로</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ol>
+<li><a href="https://portal.azure.com">portal.azure.com</a> → 검색창에 <strong>리소스 그룹</strong> → 내 그룹</li>
+<li>방금 만든 <strong><code>lang-ai901-&lt;번호&gt;</code></strong> 왼쪽 <strong>체크박스</strong>를 켭니다</li>
+<li>상단 <strong>삭제</strong> → 확인란에 <strong><code>delete</code></strong> 입력 → <strong>삭제</strong></li>
+</ol>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>az<span class="w"> </span>cognitiveservices<span class="w"> </span>account<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>-n<span class="w"> </span>lang-ai901-&lt;번호&gt;<span class="w"> </span>-g<span class="w"> </span>rg-ai901-&lt;번호&gt;
+</code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">★ 특히 이것만은 만들자마자 지우세요 — 「검색 서비스」(Azure AI Search)</p>
+<p>포털에서 리소스를 찾다 보면 <strong>「검색 서비스」 / Azure AI Search</strong> 가 눈에 띕니다.
+<strong>이 과정에서는 쓰지 않습니다.</strong> 그런데 실수로 만들면 가장 비쌉니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>과금 방식</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Language · Speech · 모델</td>
+<td><strong>호출한 만큼</strong> — 안 쓰면 0원</td>
+</tr>
+<tr>
+<td><strong>Azure AI Search (표준)</strong></td>
+<td><strong>켜져 있는 시간만큼</strong> — 안 써도 시간당 과금</td>
+</tr>
+</tbody>
+</table>
+<p>표준 계층은 <strong>시간당 약 $0.33</strong> 입니다. 하루 켜두면 $8, 한 달이면 $240 쯤 됩니다.
+<strong>만들었다면 지금 바로 지우세요.</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span>--resource-type<span class="w"> </span>Microsoft.Search/searchServices<span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>az<span class="w"> </span>search<span class="w"> </span>service<span class="w"> </span>delete<span class="w"> </span>-n<span class="w"> </span>&lt;이름&gt;<span class="w"> </span>-g<span class="w"> </span>rg-ai901-&lt;번호&gt;<span class="w"> </span>--yes
+</code></pre></div>
+</div>
+<div class="admonition question">
+<p class="admonition-title">그럼 Azure AI Search 는 언제 쓰나요</p>
+<p><strong>문서를 쪼개서 색인해 두고 질문과 가까운 조각을 찾아오는</strong> 검색 엔진입니다. RAG 의 검색 부분이죠.
+문서가 수천 쪽이라 프롬프트에 다 못 넣을 때 씁니다.</p>
+<p>우리는 <a href="../lab08-agent-portal/">Lab 08</a>에서 에이전트에 파일을 올려 같은 일을 했습니다.
+<strong>그건 Foundry 에 내장된 기능이라 검색 서비스를 따로 만들 필요가 없습니다.</strong>
+AI-901 시험 범위에도 Azure AI Search 리소스를 직접 만드는 내용은 없습니다.</p>
+</div>
+<hr />
+<h2 id="5">5. ✅ 체크포인트</h2>
+<div class="admonition success">
+<p class="admonition-title">여기까지 됐으면 통과입니다</p>
+<ul>
+<li>[ ] <code>analyze_general.py</code> 가 JSON으로 네 가지를 뽑았다</li>
+<li>[ ] 여러 번 돌려 <strong>요약 문장과 키구문 표기가 달라지는 것</strong>을 확인했다</li>
+<li>[ ] <code>temperature=0</code> 으로 안정되는 것을 확인했다</li>
+<li>[ ] <code>analyze_language.py</code> 가 <code>mixed</code> 와 신뢰도 점수를 돌려줬다</li>
+<li>[ ] 내 리소스를 하나 더 만들어 <strong>엔드포인트·키만 바꿔</strong> 같은 코드를 돌렸다</li>
+<li>[ ] <strong>그 리소스를 바로 지웠다</strong> (실수로 만든 검색 서비스가 있다면 그것도)</li>
+<li>[ ] <strong>언제 전용 서비스를 쓰는지</strong> 한 문장으로 말할 수 있다</li>
+</ul>
+</div>
+<hr />
+<h2 id="_3">🔧 안 될 때</h2>
+<details class="failure">
+<summary>JSON 앞뒤에 설명이 붙습니다</summary>
+<p>프롬프트에 강하게 지시하세요.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>JSON만 출력하고 다른 말은 하지 마라. 코드블록 표시(```)도 쓰지 마라.
+</code></pre></div>
+<p>그리고 <code>temperature=0</code> 을 넣으세요. 실무에서는 파싱 실패에 대비해
+<code>try/except</code> 로 감싸고 재시도합니다.</p>
+</details>
+<details class="failure">
+<summary>한글이 깨집니다</summary>
+<p>파일을 <strong>UTF-8</strong> 로 저장했는지 확인하세요.
+VS Code 우하단에서 인코딩을 확인할 수 있습니다.</p>
+</details>
+<details class="failure">
+<summary>f-string 안의 중괄호에서 오류가 납니다</summary>
+<p>f-string 안에서 JSON의 <code>{</code> 는 <strong><code>{{</code></strong> 로 써야 합니다.
+위 코드가 그렇게 되어 있으니 그대로 복사하세요.</p>
+</details>
+<details class="failure">
+<summary>Language 호출에서 401 · 404 가 납니다</summary>
+<p>주소부터 확인하세요. <strong><code>.openai.azure.com</code> 이 아니라 <code>.cognitiveservices.azure.com</code></strong> 입니다.
+끝의 슬래시까지 포함하고, <code>/openai/v1</code> 같은 경로는 <strong>붙이지 않습니다.</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LANGUAGE_ENDPOINT"</span><span class="p">))</span>
+</code></pre></div>
+<p>주소가 맞는데도 안 되면 <strong>리소스 종류</strong>를 보세요. Language 는 <code>AIServices</code> 리소스에만 들어 있습니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>az<span class="w"> </span>cognitiveservices<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>-o<span class="w"> </span>table
+</code></pre></div>
+<p><code>Kind</code> 가 <strong><code>AIServices</code></strong> 면 정상입니다. <code>OpenAI</code> 로 되어 있으면 Azure OpenAI 전용으로
+만들어진 것이라 Language 가 없습니다. <strong>손을 드세요</strong> — 강사가 확인해 드립니다.</p>
+<p>(강사용) 그 경우 Azure 포털에서 <strong>리소스 만들기 → "Language service"</strong> 로 따로 하나 만들면 됩니다.
+가격 계층에서 <strong>F0(무료)</strong> 를 고를 수 있고, 만든 뒤 키와 엔드포인트를 그 학생에게 주면 이어서 진행됩니다.</p>
+</details>
+<details class="failure">
+<summary>엔터티를 제대로 못 찾습니다</summary>
+<p>작은 모델의 한계입니다. 리뷰 문장을 더 명확하게 바꾸거나,
+프롬프트에 예시를 하나 넣어 보세요 (few-shot).</p>
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.instant", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

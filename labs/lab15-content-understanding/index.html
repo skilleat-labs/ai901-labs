@@ -1,0 +1,2112 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Microsoft Foundry로 직접 만들어 보는 AI-901 4일 hands-on 랩">
+      
+      
+      
+        <link rel="canonical" href="https://skilleat-labs.github.io/ai901-labs/labs/lab15-content-understanding/">
+      
+      
+        <link rel="prev" href="../lab14-image-generation/">
+      
+      
+        <link rel="next" href="../lab16-cleanup/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Lab 15 — Content Understanding 추출 - AI-901 실습 랩</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-15-content-understanding" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="AI-901 실습 랩" class="md-header__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-901 실습 랩
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 15 — Content Understanding 추출
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-901 실습 랩" class="md-nav__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-901 실습 랩
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수업 전 설치
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1일차 — 개념과 환경
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1일차 — 개념과 환경
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab00-subscription/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 00 — 내 실습 환경 확인
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab01-foundry-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 01 — Foundry 리소스와 프로젝트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab02-first-call/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 02 — 키·Python 환경·첫 연결
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2일차 — 모델과 프롬프트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2일차 — 모델과 프롬프트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab03-deploy-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 03 — 모델 배포 제대로 하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 — 첫 호출 확장과 토큰
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab05-chat-memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 05 — 대화를 기억하는 챗봇
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 — 매개변수 실험
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab07-system-grounding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 — 시스템 메시지와 근거 기반 답변
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3일차 — 에이전트와 언어
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3일차 — 에이전트와 언어
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-agent-portal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 — 포털에서 에이전트 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab09-agent-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09 — 코드에서 에이전트 호출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab10-text-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 10 — 텍스트 분석 두 가지 방법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab11-speech/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 11 — 음성 인식과 합성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab12-voice-live-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 12 — Voice Live (강사 데모)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4일차 — 비전·추출과 시험
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4일차 — 비전·추출과 시험
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab13-multimodal-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13 — 멀티모달 이미지 분석
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab14-image-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 14 — 이미지 생성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15 — Content Understanding 추출
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15 — Content Understanding 추출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-ocr-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. OCR 과 무엇이 다른가 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 준비 — 될 조건부터 확인 (3분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 준비 — 될 조건부터 확인 (3분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        패키지 (4절에서 코드를 볼 경우)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 영수증 이미지 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-analyzer-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 분석기(Analyzer) 만들기 (15분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 분석기(Analyzer) 만들기 (15분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-1. Studio 접속과 리소스 연결
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-2. 프로젝트 만들기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-3. 필드 스키마 정의
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-4. 테스트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-5. 분석기 빌드
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 분석기 두 종류 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 코드에서 부르는 구조 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 코드에서 부르는 구조 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#endpoint-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        endpoint URL은 어디서 복사하나요?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#begin_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ★ begin_ 과 폴링이 핵심입니다
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 두 강의가 여기서 만납니다
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab16-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 16 — 리소스 전체 정리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-ocr-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. OCR 과 무엇이 다른가 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 준비 — 될 조건부터 확인 (3분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 준비 — 될 조건부터 확인 (3분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        패키지 (4절에서 코드를 볼 경우)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 영수증 이미지 (3분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-analyzer-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 분석기(Analyzer) 만들기 (15분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 분석기(Analyzer) 만들기 (15분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-1. Studio 접속과 리소스 연결
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-2. 프로젝트 만들기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-3. 필드 스키마 정의
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-4. 테스트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-5. 분석기 빌드
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 분석기 두 종류 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 코드에서 부르는 구조 (10분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 코드에서 부르는 구조 (10분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#endpoint-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        endpoint URL은 어디서 복사하나요?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#begin_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ★ begin_ 과 폴링이 핵심입니다
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 두 강의가 여기서 만납니다
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-15-content-understanding">Lab 15 — Content Understanding 으로 영수증 추출</h1>
+<div class="admonition info">
+<p class="admonition-title">이 실습에서 하는 것</p>
+<p>영수증 이미지에서 <strong>총 금액 · 날짜 · 상호</strong>를 각각의 <strong>필드 값</strong>으로 뽑습니다.
+글자를 읽는 게 아니라, <strong>쓸 수 있는 데이터</strong>로 만드는 겁니다.</p>
+</div>
+<p><strong>선행</strong> <a href="../lab13-multimodal-image/">Lab 13</a> 완료 · <strong>예상 시간</strong> 40분 · <strong>비용</strong> 약 $0.1 미만</p>
+<hr />
+<h2 id="0-ocr-5">0. OCR 과 무엇이 다른가 (5분)</h2>
+<div class="admonition note">
+<p class="admonition-title">★★ 5강에서 배운 구분이 여기서 실물이 됩니다</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>OCR</th>
+<th>Content Understanding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>결과</td>
+<td><strong>글자 뭉치</strong></td>
+<td><strong>이름 붙은 필드 값</strong></td>
+</tr>
+<tr>
+<td>예</td>
+<td><code>"합계 23,000원 2026-03-10"</code></td>
+<td><code>{"총금액": 23000, "날짜": "2026-03-10"}</code></td>
+</tr>
+<tr>
+<td>다음 단계</td>
+<td>직접 파싱해야 함</td>
+<td><strong>바로 시스템에 넣을 수 있음</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>"필드로 받는다"</strong> 가 나오면 Content Understanding 입니다.
+"글자를 읽는다"면 OCR입니다. 시험에 이 짝으로 나옵니다.</p>
+</div>
+<p><strong>Lab 13(멀티모달)과도 다릅니다.</strong> 멀티모달 모델도 영수증을 읽고 설명할 수 있지만,
+<strong>매번 같은 형식으로 돌려준다는 보장이 없습니다.</strong> CU는 스키마를 미리 정해서 형식을 고정합니다.</p>
+<hr />
+<h2 id="1-3">1. 준비 — 될 조건부터 확인 (3분)</h2>
+<div class="admonition warning">
+<p class="admonition-title">이 랩은 앞선 랩들보다 조건이 까다롭습니다</p>
+<p>아래 네 가지가 모두 맞아야 분석기가 돕니다. <strong>시작 전에 확인하세요.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>조건</th>
+<th>확인 방법</th>
+<th>안 되면</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Foundry 리소스</strong>가 있어야 함</td>
+<td>Lab 01에서 만든 그것</td>
+<td>Lab 01로 돌아가기</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>리전</strong>이 Content Understanding 을 지원해야 함</td>
+<td>Studio 설정에서 리소스가 붙는지로 판단</td>
+<td>강사 화면으로 대체</td>
+</tr>
+<tr>
+<td>3</td>
+<td>내 계정에 <strong><code>Cognitive Services User</code></strong> 역할</td>
+<td>강사가 미리 부여</td>
+<td>손 들기</td>
+</tr>
+<tr>
+<td>4</td>
+<td>패키지 (코드까지 볼 경우)</td>
+<td>아래 참조</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">★ 역할이 왜 따로 필요한가 — 시험에도 이어집니다</p>
+<p>Lab 02~07 은 <strong>API 키</strong>로 호출했습니다. 키 인증은 역할(RBAC)을 거치지 않습니다.
+그런데 Content Understanding 과 에이전트는 <strong>데이터 평면(data plane)</strong> 작업이라
+<strong>역할이 있어야</strong> 합니다.</p>
+<table>
+<thead>
+<tr>
+<th>역할</th>
+<th>담당</th>
+<th>이걸로 되는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Contributor</code></td>
+<td><strong>제어 평면</strong> — 리소스·배포를 만들고 지움</td>
+<td>Lab 01 · 02</td>
+</tr>
+<tr>
+<td><strong><code>Cognitive Services User</code></strong></td>
+<td><strong>데이터 평면</strong> — 추론·추출·에이전트</td>
+<td><strong>Lab 08 · 09 · 15</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>Contributor</code> 만 있으면 리소스는 만들어지는데 <strong>분석은 거부</strong>됩니다.
+"만들 수는 있는데 쓸 수가 없다"가 이 구분의 증상입니다.</p>
+</div>
+<h3 id="4">패키지 (4절에서 코드를 볼 경우)</h3>
+<div class="highlight"><span class="filename">requirements.txt 에 추가</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="na">azure-ai-contentunderstanding</span><span class="o">=</span><span class="s">=1.1.0</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">오늘 실행하지는 않습니다</p>
+<p>4절에서 <strong>구조만</strong> 봅니다. 설치는 선택입니다 — 집에서 이어서 해보려면 이 버전으로 맞추세요.</p>
+</div>
+<hr />
+<h2 id="2-3">2. 영수증 이미지 (3분)</h2>
+<p>아래 영수증을 내려받아 쓰세요. <strong>파일명은 <code>receipt.png</code> 그대로</strong> 두시면 됩니다.</p>
+<figure>
+<p><img alt="스킬잇 카페 영수증" src="../../assets/receipt-photo.png" width="300" />
+  </p>
+<figcaption>receipt.png · 1086 × 1448 · 약 2.4MB · AI로 생성한 실습용 예시</figcaption>
+</figure>
+<p><a class="md-button md-button--primary" download="receipt.png" href="../../assets/receipt-photo.png">↓ receipt.png 내려받기</a></p>
+<p>담긴 내용은 이렇습니다. 3절에서 이 값들이 <strong>필드로</strong> 나오는지 확인하게 됩니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>스킬잇 카페
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2026-03-10 14:32
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>아메리카노  2  9,000
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>카페라떼    1  5,500
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>---------------------
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>합계          14,500
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">실물 영수증으로 해보고 싶다면</p>
+<p>지갑에 있는 영수증을 써도 됩니다. <strong>구겨지지 않게 펴고, 그림자가 지지 않게 위에서</strong> 찍으세요.
+감열지는 시간이 지나면 흐려져서 <strong>최근 영수증</strong>이 잘 읽힙니다.</p>
+</div>
+<hr />
+<h2 id="3-analyzer-15">3. 분석기(Analyzer) 만들기 (15분)</h2>
+<p>여기가 핵심입니다. <strong>무엇을 뽑을지 미리 정의</strong>합니다.</p>
+<div class="admonition danger">
+<p class="admonition-title">주의 — Foundry 포털에서는 못 만듭니다</p>
+<p><strong>사용자 지정 분석기는 Content Understanding Studio 에서만 만들 수 있습니다.</strong>
+Foundry(신규) 포털에도 Content Understanding 플레이그라운드가 있지만,
+거기서는 <strong>미리 만들어진 분석기를 써보는 것만</strong> 되고 사용자 지정 분석기 생성은 지원하지 않습니다.
+Foundry(클래식) 경험은 <strong>2026년 7월 15일 사용 중지</strong>됐습니다.</p>
+</div>
+<h3 id="3-1-studio">3-1. Studio 접속과 리소스 연결</h3>
+<ol>
+<li><a href="https://contentunderstanding.ai.azure.com">contentunderstanding.ai.azure.com</a> 에 접속해 로그인합니다</li>
+<li>처음이라면 <a href="https://contentunderstanding.ai.azure.com/settings">설정 페이지</a> 로 가서 왼쪽 위 <strong>+ Add resource</strong></li>
+<li>Lab 01에서 만든 <strong>Foundry 리소스</strong>를 고르고 <strong>Next</strong> → <strong>Save</strong></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">체크박스 하나를 꼭 확인하세요</p>
+<p><strong>Enable autodeployment for required models if no defaults are available</strong> 가 켜져 있어야 합니다.
+분석기마다 필요한 모델이 다른데, 이걸 켜두면 Studio가 알아서 배포해 줍니다.
+꺼두면 분석할 때 <strong>모델이 없다며 실패</strong>합니다.</p>
+</div>
+<h3 id="3-2">3-2. 프로젝트 만들기</h3>
+<ol>
+<li>홈에서 <strong>Create project</strong></li>
+<li>프로젝트 유형은 <strong>Extract content and fields with a custom schema</strong> 를 고릅니다</li>
+<li>이름을 적고 <strong>Create</strong></li>
+<li><code>receipt.png</code> 를 업로드합니다 → Studio가 파일을 분류하고 <strong>템플릿을 추천</strong>해 줍니다</li>
+<li>추천 중 영수증에 맞는 템플릿을 고릅니다</li>
+</ol>
+<h3 id="3-3">3-3. 필드 스키마 정의</h3>
+<p>템플릿에 딸려온 필드를 확인하고, 필요한 것만 남기거나 직접 추가합니다.</p>
+<table>
+<thead>
+<tr>
+<th>필드 이름</th>
+<th>유형</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>상호</code></td>
+<td>문자열</td>
+<td>가게 이름</td>
+</tr>
+<tr>
+<td><code>날짜</code></td>
+<td>날짜</td>
+<td>결제 일자</td>
+</tr>
+<tr>
+<td><code>총금액</code></td>
+<td>숫자</td>
+<td>합계 금액</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">설명을 구체적으로 쓰세요</p>
+<p><code>총금액</code> 에 "합계, 총액, Total 로 표시된 최종 결제 금액" 처럼 적으면 정확도가 올라갑니다.
+<strong>이게 프롬프트 역할을 합니다.</strong></p>
+</div>
+<ol>
+<li>다 고쳤으면 <strong>Save</strong></li>
+</ol>
+<h3 id="3-4">3-4. 테스트</h3>
+<ol>
+<li><strong>Run analysis</strong> 를 눌러 결과를 봅니다</li>
+<li>결과가 <strong>필드별로</strong> 나오는지 확인합니다</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"상호"</span><span class="p">:</span><span class="w">   </span><span class="s2">"스킬잇 카페"</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"날짜"</span><span class="p">:</span><span class="w">   </span><span class="s2">"2026-03-10"</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">"총금액"</span><span class="p">:</span><span class="w"> </span><span class="mi">14500</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
+</code></pre></div>
+<div class="admonition success">
+<p class="admonition-title">이게 핵심입니다</p>
+<p>OCR이었다면 <code>"스킬잇 카페 2026-03-10 14:32 아메리카노 2 9,000..."</code> 한 덩어리였을 겁니다.
+<strong>이름이 붙은 값</strong>으로 나왔다는 게 차이입니다.</p>
+</div>
+<h3 id="3-5">3-5. 분석기 빌드</h3>
+<p>결과가 마음에 들면 실제로 쓸 수 있는 분석기로 굽습니다.</p>
+<ol>
+<li>페이지 위쪽 <strong>Build analyzer</strong> → 이름을 적고 <strong>Build</strong></li>
+<li>다 되면 <strong>Jump to analyzer list</strong> → 방금 만든 분석기를 선택합니다</li>
+<li><strong>키와 엔드포인트가 들어간 코드 샘플</strong>이 보입니다 — 5절에서 볼 구조가 이겁니다</li>
+</ol>
+<hr />
+<h2 id="4-5">4. 분석기 두 종류 (5분)</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>미리 만들어진(prebuilt) 분석기</th>
+<th>사용자 지정 분석기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>준비</td>
+<td>바로 씀</td>
+<td><strong>스키마를 직접 정의</strong> ← 방금 한 것</td>
+</tr>
+<tr>
+<td>대상</td>
+<td>영수증·명함 등 일반 문서</td>
+<td>우리 회사 양식</td>
+</tr>
+<tr>
+<td>장점</td>
+<td>빠름</td>
+<td>원하는 필드만 정확히</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">★ 시험 포인트</p>
+<p>"사내 전용 양식에서 특정 필드를 뽑아야 한다" → <strong>사용자 지정 분석기</strong>
+"일반적인 영수증을 처리한다" → 미리 만들어진 분석기로 충분</p>
+</div>
+<hr />
+<h2 id="5-10">5. 코드에서 부르는 구조 (10분)</h2>
+<div class="admonition warning">
+<p class="admonition-title">오늘은 코드를 실행하지 않습니다</p>
+<p>시간 때문에 <strong>구조만</strong> 봅니다. 시험이 묻는 것도 "흐름"이지 정확한 메서드명이 아닙니다.</p>
+<p>아래 코드는 <strong><code>azure-ai-contentunderstanding==1.1.0</code> 에서 실제로 돌려 확인한 것</strong>입니다.
+집에서 이어서 해보려면 그대로 쓰시면 됩니다. 다른 버전은 메서드 이름이 다를 수 있습니다.</p>
+</div>
+<h3 id="endpoint-url">endpoint URL은 어디서 복사하나요?</h3>
+<ol>
+<li><a href="https://portal.azure.com">Azure Portal</a>에서 <strong>Content Understanding에 연결한 Foundry 리소스</strong>를 엽니다. 프로젝트가 아니라 <strong>부모 리소스</strong>입니다.</li>
+<li>왼쪽 메뉴의 <strong>리소스 관리(Resource Management) → 키 및 엔드포인트(Keys and Endpoint)</strong> 를 엽니다.</li>
+<li><strong>엔드포인트(Endpoint)</strong> 값을 복사합니다. 아래 주소는 형식 예시이므로 자신의 리소스 값을 그대로 쓰세요.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>https://&lt;내-리소스-이름&gt;.services.ai.azure.com/
+</code></pre></div>
+<p>리소스에 따라 <code>https://&lt;내-리소스-이름&gt;.cognitiveservices.azure.com/</code> 형태가 표시될 수도 있습니다. 도메인을 임의로 바꾸지 말고 <strong>포털에 표시된 실제 값</strong>을 사용합니다.</p>
+<div class="admonition warning">
+<p class="admonition-title">주소 세 가지를 구분하세요</p>
+<ul>
+<li><code>https://contentunderstanding.ai.azure.com/</code> 는 <strong>Studio 웹사이트 주소</strong>입니다. 코드의 endpoint가 아닙니다.</li>
+<li><code>/api/projects/&lt;프로젝트명&gt;</code> 이 포함된 <strong>프로젝트 엔드포인트</strong>도 이 클라이언트에 넣지 않습니다.</li>
+<li>이 코드에는 <strong>리소스 엔드포인트</strong>를 넣습니다. <code>/contentunderstanding/...</code> 나 <code>?api-version=...</code> 경로를 직접 덧붙이지 않습니다.</li>
+</ul>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">★★ <code>.env</code> 의 <code>PROJECT_ENDPOINT</code> 를 쓰면 <strong>401</strong> 이 납니다</p>
+<p><code>.env</code> 에 이미 들어 있는 주소라서 그걸 집기 쉬운데, <strong>그게 함정입니다.</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">endpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"PROJECT_ENDPOINT"</span><span class="p">)</span>   <span class="c1"># ❌ Lab 09 에이전트용입니다</span>
+</code></pre></div>
+<p>그러면 이 메시지가 나옵니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>azure.core.exceptions.ClientAuthenticationError: (None) Unauthorized.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Access token is missing, invalid, audience is incorrect
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>(https://ai.azure.com), or have expired.
+</code></pre></div>
+<p><strong>"역할이 없다"는 뜻이 아닙니다.</strong> 주소와 토큰의 종류가 어긋난 겁니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>원하는 토큰 청중(audience)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.../api/projects/&lt;프로젝트&gt;</code></td>
+<td><code>https://ai.azure.com</code> ← Foundry 프로젝트</td>
+</tr>
+<tr>
+<td><code>.../</code> (리소스)</td>
+<td><code>https://cognitiveservices.azure.com</code> ← <strong>CU SDK 가 보내는 것</strong></td>
+</tr>
+</tbody>
+</table>
+<p>CU SDK 는 항상 <code>cognitiveservices</code> 청중으로 토큰을 받아옵니다. 그래서
+프로젝트 주소에 보내면 거절됩니다. <strong>변수를 따로 만드세요.</strong></p>
+<div class="highlight"><span class="filename">.env 에 한 줄 추가</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="na">CU_ENDPOINT</span><span class="o">=</span><span class="s">https://&lt;내-리소스-이름&gt;.services.ai.azure.com/</span>
+</code></pre></div>
+</div>
+<p>복사한 주소를 <code>.env</code> 의 <strong><code>CU_ENDPOINT</code></strong> 에 넣고 시작합니다. 기존 <code>PROJECT_ENDPOINT</code> 를 고치지 말고 <strong>줄을 새로 추가</strong>하세요 — Lab 09 가 그 값을 씁니다.</p>
+<div class="highlight"><span class="filename">.env</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="na">CU_ENDPOINT</span><span class="o">=</span><span class="s">https://&lt;내-리소스-이름&gt;.services.ai.azure.com/</span>
+</code></pre></div>
+<p><code>receipt-analyzer</code> 도 예시 ID이므로 <strong>3-5 에서 빌드한 분석기 ID와 글자 그대로</strong> 맞춰야 합니다. 이 코드는 <strong>Entra ID 인증</strong>을 쓰므로 키를 붙여 넣는 대신 실행 신원과 필요한 역할을 준비합니다.</p>
+<p><a href="https://microsoftlearning.github.io/mslearn-ai-information-extraction/Instructions/Exercises/02-content-understanding-api.html#prepare-the-development-environment">공식 엔드포인트 확인 안내</a></p>
+<div class="highlight"><span class="filename">extract.py</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.contentunderstanding</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContentUnderstandingClient</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.identity</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultAzureCredential</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">load_dotenv</span><span class="p">()</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># 1. 리소스 엔드포인트로 클라이언트 생성 — PROJECT_ENDPOINT 가 아닙니다</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">client</span> <span class="o">=</span> <span class="n">ContentUnderstandingClient</span><span class="p">(</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="n">endpoint</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CU_ENDPOINT"</span><span class="p">),</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="n">credential</span><span class="o">=</span><span class="n">DefaultAzureCredential</span><span class="p">())</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># 2. 분석 작업 제출 — 로컬 파일은 _binary 쪽</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"receipt.png"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    <span class="n">poller</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">begin_analyze_binary</span><span class="p">(</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>        <span class="n">analyzer_id</span><span class="o">=</span><span class="s2">"receipt-analyzer"</span><span class="p">,</span>    <span class="c1"># 3-5 에서 빌드한 분석기 ID</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>        <span class="n">binary_input</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>        <span class="n">content_type</span><span class="o">=</span><span class="s2">"image/png"</span><span class="p">)</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># 3. 완료까지 대기 (폴링)</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="n">result</span> <span class="o">=</span> <span class="n">poller</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># 4. 결과 사용 — 필드가 있으면 필드, 없으면 읽어낸 본문</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()[</span><span class="s2">"contents"</span><span class="p">]:</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"fields"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"markdown"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">분석기를 아직 안 만들었어도 — 이건 그냥 돌아갑니다</p>
+<p>위 코드는 <strong>3-5 에서 <code>receipt-analyzer</code> 를 빌드한 뒤</strong>에 돌아갑니다.
+빌드 안 한 상태로 실행하면 <code>Analyzer not found</code> 가 납니다.</p>
+<p><strong>미리 만들어진 분석기</strong>는 아무 준비 없이 바로 됩니다. 집에서 먼저
+연결만 확인하고 싶으면 이걸로 돌려 보세요 — <strong>동작 확인했습니다.</strong></p>
+<div class="highlight"><span class="filename">extract_prebuilt.py</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.contentunderstanding</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContentUnderstandingClient</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.identity</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultAzureCredential</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">load_dotenv</span><span class="p">()</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">client</span> <span class="o">=</span> <span class="n">ContentUnderstandingClient</span><span class="p">(</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CU_ENDPOINT"</span><span class="p">),</span>          <span class="c1"># ★ 리소스 엔드포인트</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="n">DefaultAzureCredential</span><span class="p">())</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"receipt.png"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">poller</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">begin_analyze_binary</span><span class="p">(</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>        <span class="n">analyzer_id</span><span class="o">=</span><span class="s2">"prebuilt-document"</span><span class="p">,</span>   <span class="c1"># 사용자 지정 분석기 만들면 그 ID 로</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>        <span class="n">binary_input</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>        <span class="n">content_type</span><span class="o">=</span><span class="s2">"image/png"</span><span class="p">)</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="n">result</span> <span class="o">=</span> <span class="n">poller</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()[</span><span class="s2">"contents"</span><span class="p">]:</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"markdown"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)[:</span><span class="mi">500</span><span class="p">])</span>
+</code></pre></div>
+<p>나오는 건 <strong>필드가 아니라 글자 뭉치(markdown)</strong> 입니다. 영수증이 표까지
+포함해 그대로 읽혀 나옵니다. <strong>0절에서 말한 그 차이가 여기서 눈에 보입니다</strong> —
+"읽어내기"까지는 미리 만들어진 분석기로 되고, <strong>"필드로 꺼내기"가 사용자 지정
+분석기가 하는 일</strong>입니다.</p>
+<div class="admonition warning">
+<p class="admonition-title"><code>prebuilt-receipt</code> 는 피하세요</p>
+<p>영수증 전용처럼 보이지만 이 리소스에서는 <code>contents</code> 가 <strong>빈 배열</strong>로
+오고 경고도 없습니다. 확인된 건 <code>prebuilt-document</code> 쪽입니다.</p>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">입력이 URL이면 메서드가 다릅니다</p>
+<table>
+<thead>
+<tr>
+<th>입력</th>
+<th>메서드</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>로컬 파일</td>
+<td><code>begin_analyze_binary(analyzer_id=..., binary_input=...)</code></td>
+</tr>
+<tr>
+<td>공개 URL</td>
+<td><code>begin_analyze(analyzer_id=..., inputs=[AnalysisInput(url=...)])</code></td>
+</tr>
+</tbody>
+</table>
+<p>패키지는 <strong><code>azure-ai-contentunderstanding==1.1.0</code></strong> 이고,
+호출하려면 리소스에 <strong><code>Cognitive Services User</code></strong> 역할이 있어야 합니다 (1절 참조).</p>
+</div>
+<h3 id="begin_">★ <code>begin_</code> 과 폴링이 핵심입니다</h3>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>begin_...</code></td>
+<td><strong>작업을 제출</strong>만 합니다. 결과가 바로 안 옵니다</td>
+</tr>
+<tr>
+<td><code>poller.result()</code></td>
+<td><strong>끝날 때까지 기다립니다</strong> (SDK가 폴링을 대신해 줍니다)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">왜 비동기인가요</p>
+<p>문서 분석은 시간이 걸립니다. Lab 14의 비디오 생성과 같은 이유입니다.
+<strong>오래 걸리는 작업은 제출 → 폴링</strong> 패턴을 씁니다.</p>
+<p>시험에 "문서 분석 결과를 어떻게 받는가?" → <strong>작업을 제출하고 완료를 기다린다(폴링)</strong> 로 나옵니다.
+REST 는 작업 URL 을 직접 폴링하고, SDK 는 poller 가 대신해 줍니다.</p>
+</div>
+<hr />
+<h2 id="6">6. ✅ 체크포인트</h2>
+<div class="admonition success">
+<p class="admonition-title">여기까지 됐으면 통과입니다</p>
+<ul>
+<li>[ ] 분석기를 만들고 <strong>필드 3개</strong>를 정의했다</li>
+<li>[ ] 영수증에서 <strong>필드별 값</strong>이 추출됐다</li>
+<li>[ ] OCR과 CU의 차이를 한 문장으로 말할 수 있다</li>
+<li>[ ] <code>begin_...</code> → <code>poller.result()</code> 구조를 안다</li>
+</ul>
+</div>
+<hr />
+<h2 id="_1">🔧 안 될 때</h2>
+<details class="failure">
+<summary><code>Unauthorized ... audience is incorrect (https://ai.azure.com)</code> 가 납니다</summary>
+<p><strong>401 입니다. 권한이 아니라 주소 문제입니다.</strong> 5절의 danger 박스를 보세요.</p>
+<p><code>endpoint</code> 에 <code>/api/projects/...</code> 가 붙어 있으면 무조건 이 에러가 납니다.
+<code>.env</code> 의 <code>PROJECT_ENDPOINT</code> 를 그대로 쓰면 그렇게 됩니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># ❌</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">endpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"PROJECT_ENDPOINT"</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># ✅</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">endpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CU_ENDPOINT"</span><span class="p">)</span>   <span class="c1"># https://&lt;리소스&gt;.services.ai.azure.com/</span>
+</code></pre></div>
+<p>역할을 의심하기 전에 <strong>주소 끝을 먼저 보세요.</strong> 403 과 401 은 다른 증상입니다.</p>
+</details>
+<details class="failure">
+<summary><code>ModelNotFound</code> · <code>Analyzer '...' not found</code> 가 납니다</summary>
+<p><strong>분석기를 아직 빌드하지 않은 경우입니다.</strong> 3-5 의 <strong>Build analyzer</strong> 를 눌러야
+<code>analyzer_id</code> 로 부를 수 있는 분석기가 생깁니다. Studio 에서 테스트만 돌려본
+상태로는 생기지 않습니다.</p>
+<p>분석기 ID 는 Studio 의 분석기 목록에 적힌 것과 <strong>글자 그대로</strong> 같아야 합니다.</p>
+<p>급하면 미리 만들어진 분석기로 연결만 확인할 수 있습니다.
+<strong>5절의 <code>extract_prebuilt.py</code></strong> 를 그대로 쓰세요 — <code>analyzer_id</code> 만
+<code>prebuilt-document</code> 로 바꾼 코드입니다.</p>
+<p>단 이건 <strong>필드가 아니라 글자 뭉치</strong>로 나옵니다 — 0절의 그 차이가 눈에 보입니다.</p>
+</details>
+<details class="failure">
+<summary>에러는 없는데 <code>contents</code> 가 빈 배열로 옵니다</summary>
+<p>분석은 접수됐지만 결과가 비었습니다. 3-1 의
+<strong>Enable autodeployment for required models if no defaults are available</strong>
+체크박스를 확인하세요. 분석기가 쓰는 모델이 배포돼 있지 않으면 조용히 비어서 옵니다.</p>
+</details>
+<details class="failure">
+<summary>분석을 실행하면 권한 오류(403)가 납니다</summary>
+<p><strong><code>Cognitive Services User</code></strong> 역할이 없는 경우입니다 (1절 참조).
+<code>Contributor</code> 만으로는 안 됩니다. <strong>손을 드세요</strong> — 강사가 역할을 부여합니다.</p>
+</details>
+<details class="failure">
+<summary>Foundry 포털에서 Content Understanding 메뉴를 못 찾겠습니다</summary>
+<p><strong>Foundry 포털에서 찾지 마세요.</strong> 사용자 지정 분석기는
+<a href="https://contentunderstanding.ai.azure.com">contentunderstanding.ai.azure.com</a> 에서 만듭니다 (3절 참조).</p>
+<p>Studio에서 리소스가 붙지 않으면 <strong>리전</strong>이 지원 대상이 아닐 수 있습니다.
+안 되면 손을 드세요 — <strong>강사 화면으로 대체</strong>합니다. 시험 포인트는 전부 전달됩니다.</p>
+</details>
+<details class="failure">
+<summary>필드 값이 비어 있습니다</summary>
+<ul>
+<li>이미지가 흐리거나 글자가 작으면 인식률이 떨어집니다. 더 선명한 걸로 바꿔 보세요</li>
+<li>필드 <strong>설명</strong>을 구체적으로 적으세요 — "합계, 총액, Total 로 표시된 금액"</li>
+<li>영수증에 그 항목이 실제로 있는지 확인하세요</li>
+</ul>
+</details>
+<details class="failure">
+<summary>날짜 형식이 이상하게 나옵니다</summary>
+<p>필드 유형을 <strong>날짜</strong>로 지정했는지 확인하세요.
+문자열로 두면 영수증에 적힌 그대로 나옵니다.</p>
+</details>
+<details class="failure">
+<summary>금액에 쉼표가 들어가 문자열로 나옵니다</summary>
+<p>필드 유형을 <strong>숫자</strong>로 지정하세요.
+그래도 안 되면 설명에 "쉼표 없는 숫자로" 를 추가해 보세요.</p>
+</details>
+<hr />
+<h2 id="_2">💡 두 강의가 여기서 만납니다</h2>
+<div class="admonition quote">
+<p><strong>5강</strong>에서 "필드 매핑 5단계"를 개념으로 배웠고,
+<strong>11강</strong>과 이 실습에서 그걸 실제로 만들었습니다.</p>
+<p>영수증 → 스키마 정의 → 추출 → <strong>시스템에 바로 넣을 수 있는 JSON</strong>.
+이게 "정보 추출" 워크로드의 실체입니다.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.instant", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1990 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Microsoft Foundry로 직접 만들어 보는 AI-901 4일 hands-on 랩">
+      
+      
+      
+        <link rel="canonical" href="https://skilleat-labs.github.io/ai901-labs/labs/lab02-first-call/">
+      
+      
+        <link rel="prev" href="../lab01-foundry-project/">
+      
+      
+        <link rel="next" href="../lab03-deploy-model/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Lab 02 — 키·Python 환경·첫 연결 - AI-901 실습 랩</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-02-python" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="AI-901 실습 랩" class="md-header__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-901 실습 랩
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 02 — 키·Python 환경·첫 연결
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-901 실습 랩" class="md-nav__button md-logo" aria-label="AI-901 실습 랩" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-901 실습 랩
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    수업 전 설치
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1일차 — 개념과 환경
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1일차 — 개념과 환경
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab00-subscription/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 00 — 내 실습 환경 확인
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab01-foundry-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 01 — Foundry 리소스와 프로젝트
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 02 — 키·Python 환경·첫 연결
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 02 — 키·Python 환경·첫 연결
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 모델 하나 배포하기 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 엔드포인트와 키 복사 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-python-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Python 환경 만들기 (12분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-env-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. .env 파일 만들기 (8분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. .env 파일 만들기 (8분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        엔드포인트 가져오기
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verifypy-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. verify.py 실행하기 (15분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. verify.py 실행하기 (15분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        코드가 하는 일
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 오늘 만든 것
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2일차 — 모델과 프롬프트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2일차 — 모델과 프롬프트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab03-deploy-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 03 — 모델 배포 제대로 하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab04-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 04 — 첫 호출 확장과 토큰
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab05-chat-memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 05 — 대화를 기억하는 챗봇
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab06-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 06 — 매개변수 실험
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab07-system-grounding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 07 — 시스템 메시지와 근거 기반 답변
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3일차 — 에이전트와 언어
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3일차 — 에이전트와 언어
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab08-agent-portal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 08 — 포털에서 에이전트 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab09-agent-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 09 — 코드에서 에이전트 호출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab10-text-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 10 — 텍스트 분석 두 가지 방법
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab11-speech/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 11 — 음성 인식과 합성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab12-voice-live-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 12 — Voice Live (강사 데모)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4일차 — 비전·추출과 시험
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4일차 — 비전·추출과 시험
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab13-multimodal-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 13 — 멀티모달 이미지 분석
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab14-image-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 14 — 이미지 생성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab15-content-understanding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 15 — Content Understanding 추출
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab16-cleanup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 16 — 리소스 전체 정리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 모델 하나 배포하기 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 엔드포인트와 키 복사 (5분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-python-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Python 환경 만들기 (12분)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-env-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. .env 파일 만들기 (8분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. .env 파일 만들기 (8분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        엔드포인트 가져오기
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verifypy-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. verify.py 실행하기 (15분)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. verify.py 실행하기 (15분)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        코드가 하는 일
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. ✅ 체크포인트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 안 될 때
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 오늘 만든 것
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-02-python">Lab 02 — 키·Python 환경·첫 연결</h1>
+<div class="admonition info">
+<p class="admonition-title">이 실습에서 하는 것</p>
+<p>모델을 하나 배포하고, 내 노트북에서 <strong>코드로 불러서 답을 받습니다.</strong>
+1일차의 마지막이자 가장 중요한 실습입니다.</p>
+</div>
+<p><strong>선행</strong> <a href="../lab01-foundry-project/">Lab 01</a> 완료 · <strong>Python 3.10 이상</strong> (<a href="../../install/">설치 방법</a> · <a href="../lab00-subscription/">Lab 00</a> 4절에서 확인) · <strong>예상 시간</strong> 45분 · <strong>비용</strong> 약 $0.01 미만</p>
+<div class="admonition danger">
+<p class="admonition-title">이게 안 되면 2~4일차가 전부 막힙니다</p>
+<p>오늘 남은 시간은 이 실습에 다 쓰셔도 됩니다. <strong>혼자 10분 이상 붙잡지 말고 손을 드세요.</strong></p>
+</div>
+<hr />
+<h2 id="1-5">1. 모델 하나 배포하기 (5분)</h2>
+<div class="admonition note">
+<p class="admonition-title">화면 기준 — 새 Foundry</p>
+<p>이 가이드는 Foundry 포털 우상단 <strong>새 Foundry</strong> 토글이 <strong>켜진</strong> 화면 기준입니다.
+메뉴는 왼쪽이 아니라 <strong>위쪽</strong>(홈 · 검색 · 빌드 · 작업 · 관리 · 문서)에 있습니다.</p>
+</div>
+<p>코드로 부르려면 <strong>부를 대상</strong>이 있어야 합니다. 지금은 가장 작은 모델 하나만 올립니다.</p>
+<ol>
+<li>
+<p><a href="https://ai.azure.com">ai.azure.com</a> → 내 프로젝트 <strong>홈</strong> → <strong>「모델 살펴보기」</strong> (옛 이름: 모델 카탈로그)</p>
+</li>
+<li>
+<p><code>gpt-5.4-mini</code> 를 검색해서 선택합니다.</p>
+</li>
+<li>
+<p><strong>배포</strong> 를 누릅니다. <strong>두 갈래가 나옵니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th>고를 것</th>
+<th>설명</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기본 설정</td>
+<td>전역 표준과 <strong>기본 할당량</strong>으로 설정합니다</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>사용자 지정 설정</strong></td>
+<td>나만의 SKU, <strong>할당량</strong>, PTU, 스필오버, 가드레일을 설정합니다</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition danger">
+<p class="admonition-title">반드시 <strong>사용자 지정 설정</strong> 을 고르세요</p>
+<p>«기본 설정» 을 누르면 <strong>할당량을 기본값 그대로 크게 잡습니다.</strong>
+TPM 은 구독 전체에서 나눠 쓰는 자원이라, 앞 몇 명이 크게 잡으면
+<strong>뒷사람이 "할당량 부족" 으로 배포를 못 합니다.</strong></p>
+<p>우리는 TPM 을 직접 낮춰야 하므로 «사용자 지정 설정» 으로 들어갑니다.</p>
+</div>
+</li>
+<li>
+<p><strong>배포 유형이 <code>글로벌 표준</code>(Global Standard) 인지 확인합니다.</strong></p>
+<p>그 아래 <strong>우선 처리</strong>는 <strong>사용 안 함</strong> 그대로, <strong>가드레일</strong>은 <strong>DefaultV2</strong> 그대로 둡니다.
+(가드레일이 무엇인지는 내일 Lab 03 에서 다룹니다)</p>
+<div class="admonition warning">
+<p class="admonition-title">⚠ <code>Standard</code> 가 아니라 <code>Global Standard</code> 입니다</p>
+<p>둘은 처리 위치와 <strong>할당량 규모</strong>가 다릅니다.
+<code>gpt-5.4-mini</code> 는 지역형 <code>Standard</code> 에 <strong>기본 할당량이 아예 없어서</strong>
+그걸 고르면 배포가 실패합니다. 이유는 내일 Lab 03 에서 다룹니다.</p>
+</div>
+</li>
+<li>
+<p>배포 이름을 확인합니다. 기본값 <code>gpt-5.4-mini</code> 를 <strong>그대로 쓰세요.</strong></p>
+</li>
+<li>
+<p><strong>「분당 토큰 속도 제한」 칸에 <code>10000</code> 을 입력합니다.</strong></p>
+<div class="admonition danger">
+<p class="admonition-title">이 칸은 “K” 단위가 아니라 <strong>실제 토큰 수</strong> 입니다</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>분당 토큰 속도 제한   [ 10000 ]  / 1000000
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                       ↑ 내가 쓸 값   ↑ 구독 전체 한도
+</code></pre></div>
+<p><strong><code>10000</code> 을 그대로 입력하세요.</strong> <code>10</code> 이나 <code>10K</code> 가 아닙니다.
+오른쪽 <code>1000000</code> 은 구독 전체가 나눠 쓰는 총량입니다.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">슬라이더 최저값(1000)으로 두지 마세요</p>
+<p>너무 작으면 <strong>호출 한 번에 한도를 넘어 429 가 쏟아집니다.</strong></p>
+<p>특히 Lab 05(대화를 기억하는 챗봇)에서 터집니다. 대화가 쌓이면 매 호출마다
+지금까지의 전체 대화를 다시 보내기 때문에, 10턴째에는 한 번에 3~5천 토큰이
+들어갑니다. 1,000 으로 두면 <strong>한 번도 못 부릅니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>1,000</th>
+<th><strong>10,000</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>분당 호출</td>
+<td>1~2회</td>
+<td>10~14회</td>
+</tr>
+<tr>
+<td>Lab 05</td>
+<td>❌ 막힘</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">반대로 크게 잡아도 안 됩니다 — 뒷사람이 막힙니다</p>
+<p>TPM 은 <strong>구독 전체에서 나눠 쓰는 자원</strong>입니다.
+앞 몇 명이 크게 잡으면 나머지가 "할당량 부족" 으로 배포를 못 합니다.</p>
+<p>32명 × 10,000 = <strong>320,000</strong> 으로 구독 한도(1,000,000)의 <strong>32%</strong> 만 씁니다.
+강사 데모와 이미지 모델 몫까지 남습니다.
+(강사가 다른 값을 안내하면 그 값을 쓰세요)</p>
+</div>
+</li>
+<li>
+<p><strong>배포</strong> → 완료될 때까지 기다립니다 (1~2분).</p>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">배포 이름을 꼭 메모하세요</p>
+<p>코드에서 쓰는 건 <strong>모델 이름이 아니라 배포 이름</strong>입니다.
+기본값을 바꾸지 않았다면 <code>gpt-5.4-mini</code> 입니다. <strong>오타 하나로 404가 납니다.</strong></p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">왜 작은 모델인가요</p>
+<p>지금은 "연결이 되는가"만 확인하면 되기 때문입니다. 작고 싸고 빠릅니다.
+<strong>어떤 모델을 왜 고르는지, 배포 유형·TPM·컨텐츠 필터는 무엇인지</strong>는
+내일(2일차) Lab 03에서 제대로 다룹니다.</p>
+</div>
+<hr />
+<h2 id="2-5">2. 엔드포인트와 키 복사 (5분)</h2>
+<ol>
+<li>
+<p>프로젝트 홈 화면에서 <strong>개요</strong> 를 봅니다.</p>
+</li>
+<li>
+<p>두 가지를 복사해서 메모장에 붙여 둡니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>무엇</th>
+<th>생김새</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>엔드포인트</strong></td>
+<td>모델을 부르는 <strong>주소</strong></td>
+<td><code>https://&lt;리소스이름&gt;.openai.azure.com/openai/v1/</code></td>
+</tr>
+<tr>
+<td><strong>API 키</strong></td>
+<td>그 요청을 <strong>인증</strong>하는 수단</td>
+<td>길고 무작위한 문자열 (Key 1 / Key 2)</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<div class="admonition danger">
+<p class="admonition-title">★ 엔드포인트는 두 개가 있습니다 — 헷갈리면 연결이 안 됩니다</p>
+<p>Foundry 프로젝트 홈 화면에 주소가 <strong>두 개</strong> 나란히 보입니다.</p>
+<table>
+<thead>
+<tr>
+<th>화면의 이름</th>
+<th>생김새</th>
+<th>쓰는 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>프로젝트 엔드포인트</td>
+<td><code>...services.ai.azure.com/api/projects/...</code></td>
+<td><strong>에이전트</strong> (Lab 09)</td>
+</tr>
+<tr>
+<td><strong>Azure OpenAI 엔드포인트</strong></td>
+<td><code>...openai.azure.com/openai/v1</code></td>
+<td><strong>모델 — 오늘 쓸 것</strong></td>
+</tr>
+</tbody>
+</table>
+<p>우리가 쓸 건 <strong>오른쪽, <code>openai.azure.com</code> 으로 된 것</strong>입니다.
+<code>services.ai.azure.com</code> 을 넣으면 연결되지 않습니다.</p>
+<p>그리고 주소 끝의 <strong><code>/openai/v1</code></strong> 이 반드시 있어야 합니다. 없으면 404 입니다.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">키는 비밀번호입니다</p>
+<ul>
+<li>화면 공유 중이라면 키가 보이지 않게 가리세요</li>
+<li>코드에 <strong>직접 적지 않습니다.</strong> 다음 단계에서 <code>.env</code> 파일에 넣습니다</li>
+<li>GitHub에 올리지 마세요</li>
+</ul>
+</div>
+<div class="admonition question">
+<p class="admonition-title">키가 왜 두 개(Key 1, Key 2)인가요</p>
+<p>서비스를 멈추지 않고 키를 교체하기 위해서입니다.
+Key 1을 쓰는 중에 Key 2를 새로 발급해 바꿔 끼우는 식입니다. <strong>아무거나 하나 쓰면 됩니다.</strong></p>
+</div>
+<hr />
+<h2 id="3-python-12">3. Python 환경 만들기 (12분)</h2>
+<div class="admonition info">
+<p class="admonition-title">Python 설치가 안 된 분 — 먼저 읽으세요</p>
+<p><strong>포털의 웹 VS Code 로 대신할 수 있습니다.</strong> 설치가 전혀 필요 없습니다.</p>
+<p>모델 화면 → <strong>「코드에서 계속」</strong> → 맨 아래 <strong>「웹용 VS Code 설치 건너뛰기」</strong></p>
+<p>Azure Cloud Shell 기반이라 <strong>진짜 리눅스 터미널</strong>이 열립니다.
+3절부터 5절까지를 <strong>그 안에서 그대로</strong> 하시면 됩니다 —
+<code>mkdir</code> · <code>.env</code> 만들기 · <code>pip install</code> · <code>python verify.py</code> 전부 됩니다.</p>
+<p>가상 환경(<code>python -m venv</code>)은 건너뛰어도 됩니다. 이미 격리된 공간입니다.</p>
+<div class="admonition danger">
+<p class="admonition-title">주의 두 가지 — 그래서 비상용입니다</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>시간 제한</strong></td>
+<td>화면 아래에 남은 시간이 표시됩니다 (약 4시간). 끊기면 다시 열어야 합니다</td>
+</tr>
+<tr>
+<td><strong>파일 보존</strong></td>
+<td>샌드박스가 초기화되면 만든 파일이 사라질 수 있습니다</td>
+</tr>
+</tbody>
+</table>
+<p>4일 동안 <strong>같은 <code>ai901/</code> 폴더를 Lab 16 까지 이어서</strong> 씁니다.
+매일 처음부터 다시 만들게 되면 시간이 많이 듭니다.</p>
+<p><strong>코드는 따로 백업해 두세요.</strong> 퇴실 전에 내 PC 로 내려받거나 메일로 보내두면 됩니다.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">대신 좋은 점</p>
+<p>이미 로그인된 상태라 <strong>3일차 Lab 09 의 <code>az login</code> 이 필요 없습니다.</strong></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">되도록 로컬에 설치하세요</p>
+<p>가상 환경과 <code>.env</code> 는 <strong>시험에 나오는 개념</strong>입니다.
+<strong>오늘 막히지 않는 것이 우선</strong>이니 비상 경로로 쓰시고,
+저녁에 로컬에 설치해서 다시 해보시길 권합니다.</p>
+</div>
+</div>
+<p>작업할 폴더를 하나 만들고, 그 안에 <strong>가상 환경</strong>을 만듭니다.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows</label><label for="__tabbed_1_2">macOS · Linux</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">mkdir</span> <span class="n">ai901</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd </span><span class="n">ai901</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">activate</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mkdir<span class="w"> </span>ai901
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>ai901
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><strong>터미널 프롬프트 앞에 <code>(.venv)</code> 가 붙으면</strong> 활성화된 것입니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>(.venv) C:\Users\hong\ai901&gt;
+</code></pre></div>
+<p>이제 패키지를 설치합니다. 같은 폴더에 <strong><code>requirements.txt</code></strong> 를 만들고 아래를 넣으세요.</p>
+<div class="highlight"><span class="filename">requirements.txt</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">openai</span><span class="o">=</span><span class="s">=2.46.0</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="na">python-dotenv</span><span class="o">=</span><span class="s">=1.2.4</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</code></pre></div>
+<p>설치 확인:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip<span class="w"> </span>list
+</code></pre></div>
+<p>목록에 <strong><code>openai</code> 2.46.0</strong> 과 <strong><code>python-dotenv</code></strong> 가 보이면 됩니다.</p>
+<div class="admonition warning">
+<p class="admonition-title">★ 버전을 고정하는 이유 — 꼭 <code>==</code> 로 설치하세요</p>
+<p><code>pip install openai</code> 로 설치하면 <strong>그날의 최신 버전</strong>이 들어옵니다.
+SDK가 올라가면서 메서드 이름이나 인자가 바뀌는 일이 실제로 있어서,
+<strong>어제까지 되던 코드가 오늘 안 되는</strong> 상황이 생깁니다.</p>
+<p>교실에서는 이게 더 심각합니다. 설치 시점이 조금씩 달라서
+<strong>32명의 환경이 서로 달라지면</strong> 오류를 같이 잡을 수 없습니다.</p>
+<p><code>openai 2.46.0</code> 과 <code>azure-identity 1.25.3</code> 은 Microsoft 공식 문서가
+<strong>함께 테스트했다고 밝힌 조합</strong>입니다. 그래서 이 버전으로 맞춥니다.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">가상 환경이 왜 필요한가요</p>
+<p>프로젝트마다 쓰는 패키지 버전이 다르기 때문입니다.
+가상 환경 없이 설치하면 다른 프로젝트와 충돌합니다. 실무에서는 거의 항상 씁니다.</p>
+</div>
+<hr />
+<h2 id="4-env-8">4. <code>.env</code> 파일 만들기 (8분)</h2>
+<p><code>ai901</code> 폴더 안에 <strong><code>.env</code></strong> 라는 이름의 파일을 만듭니다. (확장자 없이 점으로 시작합니다)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="na">AZURE_OPENAI_ENDPOINT</span><span class="o">=</span><span class="s">https://&lt;리소스이름&gt;.openai.azure.com/openai/v1/</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="na">API_KEY</span><span class="o">=</span><span class="s">여기에_키_붙여넣기</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="na">MODEL_DEPLOYMENT_NAME</span><span class="o">=</span><span class="s">gpt-5.4-mini</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">지름길 — 포털이 코드를 통째로 줍니다</p>
+<p>모델 화면 우상단 <strong>「코드에서 계속」</strong> 을 누르면
+<strong>엔드포인트 · API 키 · 동작하는 예제 코드</strong>가 한 화면에 나옵니다.</p>
+<ul>
+<li><strong>인증 방법</strong> 드롭다운을 <strong><code>API key</code></strong> 로 바꾸세요 (기본값은 Entra ID 입니다)</li>
+<li>거기 나온 주소는 <code>...services.ai.azure.com/openai/v1</code> 일 수 있습니다.
+  홈 화면의 <code>...openai.azure.com/openai/v1</code> 과 <strong>호스트가 다른데 둘 다 됩니다.</strong>
+  헷갈리면 <strong>한쪽만 골라서 끝까지 그걸 쓰세요.</strong></li>
+</ul>
+<p>아래 절차는 홈 화면에서 직접 가져오는 방법입니다. 둘 중 편한 쪽으로 하세요.</p>
+</div>
+<h3 id="_1">엔드포인트 가져오기</h3>
+<ol>
+<li><a href="https://ai.azure.com">ai.azure.com</a> → 내 프로젝트 <strong>홈</strong> 화면</li>
+<li>가운데 가로로 긴 칸에서 <strong><code>Azure OpenAI 엔드포인트</code></strong> 를 찾습니다</li>
+<li>오른쪽 <strong>복사 아이콘</strong>을 눌러 복사합니다</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>https://ai901-01-nrk.openai.azure.com/openai/v1
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>                                        └────────┘ 이 경로가 있어야 합니다
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">복사한 뒤 끝을 한 번 보세요 — <code>/</code> 를 붙입니다</p>
+<p>포털은 끝에 슬래시 없이 <code>/openai/v1</code> 까지만 줍니다.
+<code>.env</code> 에는 <strong>끝에 <code>/</code> 를 붙여서</strong> 넣으세요.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="na">AZURE_OPENAI_ENDPOINT</span><span class="o">=</span><span class="s">https://ai901-01-nrk.openai.azure.com/openai/v1/</span>
+</code></pre></div>
+<p>완성한 값을 <strong>환경 기록표에 적어 두세요.</strong></p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">왼쪽의 프로젝트 엔드포인트를 넣으면 안 되나요</p>
+<p>안 됩니다. 그건 <strong>에이전트를 부를 때</strong> 쓰는 주소라서 Lab 09에서 따로 씁니다.
+<code>services.ai.azure.com</code> 이 보이면 잘못 가져온 것입니다.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">화면에 <code>/openai/v1</code> 이 안 보이고 주소가 짧게 끝납니다</p>
+<p>Azure 포털의 <strong>키 및 엔드포인트</strong> 화면은 호스트까지만 보여주기도 합니다.
+그럴 땐 직접 이어 붙이세요.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>https://&lt;리소스이름&gt;.openai.azure.com  +  /openai/v1/
+</code></pre></div>
+<p><code>&lt;리소스이름&gt;</code> 은 Lab 01에서 정한 이름입니다. <code>.cognitiveservices.azure.com</code>
+주소가 보이더라도, 이 과정에서는 <strong><code>.openai.azure.com</code></strong> 쪽을 쓰세요.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">자주 틀리는 네 가지</p>
+<ul>
+<li><strong>프로젝트 엔드포인트를 넣음</strong> · <strong><code>/openai/v1/</code> 를 빠뜨림</strong> ← 가장 흔합니다</li>
+<li><strong>따옴표를 넣지 마세요.</strong> <code>API_KEY="abc"</code> ❌ → <code>API_KEY=abc</code> ✅</li>
+<li><strong>등호 앞뒤에 공백을 넣지 마세요.</strong> <code>API_KEY = abc</code> ❌</li>
+<li><strong>줄 끝 공백</strong>도 오류가 됩니다. 붙여넣고 끝에 커서를 둬서 확인하세요</li>
+</ul>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">VS Code에서 파일 이름이 <code>.env.txt</code> 로 저장될 때</p>
+<p>저장할 때 파일 형식을 <strong>모든 파일(All Files)</strong> 로 바꾸고 <code>.env</code> 로 저장하세요.
+탐색기에서 <strong>파일 확장명 표시</strong>를 켜두면 확인하기 쉽습니다.</p>
+</div>
+<hr />
+<h2 id="5-verifypy-15">5. <code>verify.py</code> 실행하기 (15분)</h2>
+<p>같은 폴더에 <strong><code>verify.py</code></strong> 를 만들고 아래를 넣습니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">load_dotenv</span><span class="p">()</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">base_url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"AZURE_OPENAI_ENDPOINT"</span><span class="p">),</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"API_KEY"</span><span class="p">))</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="n">r</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="n">model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MODEL_DEPLOYMENT_NAME"</span><span class="p">),</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">"안녕하세요. 한 문장으로 인사해 주세요."</span><span class="p">)</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">output_text</span><span class="p">)</span>
+</code></pre></div>
+<p>실행합니다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>verify.py
+</code></pre></div>
+<h3 id="_2">코드가 하는 일</h3>
+<table>
+<thead>
+<tr>
+<th>줄</th>
+<th>하는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>load_dotenv()</code></td>
+<td><code>.env</code> 를 읽어 환경 변수로 올립니다</td>
+</tr>
+<tr>
+<td><code>client = OpenAI(...)</code></td>
+<td><strong>연결을 만드는 줄</strong> — 아직 아무것도 보내지 않습니다</td>
+</tr>
+<tr>
+<td><code>client.responses.create(...)</code></td>
+<td><strong>실제로 요청을 보내는 줄</strong></td>
+</tr>
+<tr>
+<td><code>print(r.output_text)</code></td>
+<td>모델의 답을 출력합니다</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">★ 이 구분이 시험에 나옵니다</p>
+<p><strong>"이 코드에서 프롬프트를 제출하는 줄은?"</strong> 이라는 문제가 실제로 출제됩니다.
+답은 <code>client.responses.create(...)</code> 입니다. <code>OpenAI(...)</code> 는 연결만 만듭니다.</p>
+</div>
+<hr />
+<h2 id="6">6. ✅ 체크포인트</h2>
+<div class="admonition success">
+<p class="admonition-title">여기까지 됐으면 1일차 완료입니다</p>
+<ul>
+<li>[ ] 터미널 프롬프트에 <code>(.venv)</code> 가 보인다</li>
+<li>[ ] <code>pip list</code> 의 <code>openai</code> 가 <strong>2.46.0</strong> 이다</li>
+<li>[ ] <code>.env</code> 에 엔드포인트 · 키 · 배포 이름 <strong>세 줄</strong>이 들어 있다</li>
+<li>[ ] 엔드포인트가 <strong><code>/openai/v1/</code> 로 끝난다</strong> ← 404의 1순위 원인</li>
+<li>[ ] 엔드포인트를 <strong>환경 기록표에 적었다</strong></li>
+<li>[ ] <code>python verify.py</code> 를 실행했다</li>
+<li>[ ] <strong>터미널에 모델의 인사말이 한 줄 출력됐다</strong> ← 이게 성공 기준입니다</li>
+</ul>
+</div>
+<p><strong>전원이 통과해야 1일차가 끝납니다.</strong> 먼저 끝나신 분은 옆자리를 도와주세요.</p>
+<hr />
+<h2 id="_3">🔧 안 될 때</h2>
+<div class="admonition tip">
+<p class="admonition-title">오류 메시지의 숫자를 먼저 보세요</p>
+<p><code>401</code> · <code>404</code> · <code>429</code> 중 어느 것인지에 따라 원인이 완전히 다릅니다.</p>
+</div>
+<details class="failure">
+<summary>401 Unauthorized — 인증 실패</summary>
+<p><strong>키가 잘못 전달된 것입니다.</strong></p>
+<ol>
+<li><code>.env</code> 의 <code>API_KEY</code> 값 앞뒤에 <strong>공백이나 따옴표</strong>가 없는지 확인</li>
+<li>포털에서 키를 <strong>다시 복사</strong>해서 붙여넣기</li>
+<li>Key 1 대신 Key 2로 바꿔 시도</li>
+</ol>
+</details>
+<details class="failure">
+<summary>404 Not Found — 주소나 배포 이름을 못 찾음</summary>
+<p><strong>가장 흔한 오류입니다.</strong> 원인이 세 가지인데, <strong>반드시 이 순서로</strong> 확인하세요.</p>
+<p><strong>① 주소 경로</strong> — 이게 제일 흔합니다</p>
+<p><code>.env</code> 의 <code>AZURE_OPENAI_ENDPOINT</code> 가 <strong><code>/openai/v1/</code> 로 끝나는지</strong> 보세요.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="na">https</span><span class="o">:</span><span class="s">//ai901-01-nrk.openai.azure.com/            ❌ 404</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="na">https</span><span class="o">:</span><span class="s">//ai901-01-nrk.openai.azure.com/openai/v1   ❌ 끝 슬래시 없음</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="na">https</span><span class="o">:</span><span class="s">//ai901-01-nrk.openai.azure.com/openai/v1/  ✅</span>
+</code></pre></div>
+<p><strong>② 배포 이름</strong></p>
+<ol>
+<li>Foundry 포털 → <strong>배포</strong> 목록에서 이름을 <strong>그대로 복사</strong></li>
+<li><code>.env</code> 의 <code>MODEL_DEPLOYMENT_NAME</code> 과 <strong>글자 하나까지</strong> 같은지 확인</li>
+<li>모델 이름이 아니라 <strong>배포 이름</strong>을 넣었는지 확인
+   (배포할 때 이름을 바꿨다면 그 이름입니다. 기본값을 그대로 뒀다면 둘이 같습니다)</li>
+</ol>
+<p><strong>③ 모델이 그 기능을 지원하는지</strong></p>
+<p>배포한 모델이 <code>responses</code> 를 지원하지 않으면 404 또는 매개변수 오류가 납니다.
+이 과정은 <code>gpt-5.4-mini</code> 기준입니다. 다른 모델을 배포했다면 손을 드세요.</p>
+<div class="admonition tip">
+<p class="admonition-title">어디까지 왔는지 확인하는 법</p>
+<p><code>401</code> 이 난다면 <strong>주소는 맞은 것</strong>입니다 (서버에 닿아서 인증까지 갔다는 뜻).
+<code>404</code> 는 아직 주소나 배포를 못 찾은 단계입니다.</p>
+</div>
+</details>
+<details class="failure">
+<summary>429 Too Many Requests — 속도 제한</summary>
+<p>같은 교실에서 동시에 요청이 몰렸을 수 있습니다.</p>
+<ol>
+<li><strong>30초 뒤 다시 실행</strong></li>
+<li>계속 나면 포털에서 배포의 <strong>TPM(분당 토큰)</strong> 할당량을 올립니다</li>
+<li>TPM은 내일 Lab 03에서 제대로 다룹니다</li>
+</ol>
+</details>
+<details class="failure">
+<summary>ModuleNotFoundError: No module named 'openai'</summary>
+<p><strong>가상 환경이 꺼져 있습니다.</strong></p>
+<ol>
+<li>터미널 프롬프트 앞에 <code>(.venv)</code> 가 있는지 확인</li>
+<li>없으면 3번 단계의 활성화 명령을 다시 실행</li>
+<li>그다음 <code>pip install -r requirements.txt</code> 재실행</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">터미널을 새로 열면 가상 환경이 꺼집니다</p>
+<p>매번 활성화해 줘야 합니다. 4일 내내 이 오류가 제일 많이 납니다.</p>
+</div>
+</details>
+<details class="failure">
+<summary>엔드포인트에 services.ai.azure.com 이 들어 있습니다</summary>
+<p><strong>프로젝트 엔드포인트를 잘못 가져온 것입니다.</strong> 가장 흔한 혼동입니다.</p>
+<p>프로젝트 홈 화면에서 <strong><code>Azure OpenAI 엔드포인트</code></strong> 칸(오른쪽)을 다시 복사하세요.
+<code>openai.azure.com</code> 이 들어 있어야 맞습니다.</p>
+</details>
+<details class="failure">
+<summary>엔드포인트 주소에 cognitiveservices.azure.com 이 들어 있습니다</summary>
+<p>Azure 포털의 키 및 엔드포인트 화면이 그 주소를 보여줬을 수 있습니다.</p>
+<p>이 과정에서는 <strong><code>https://&lt;리소스이름&gt;.openai.azure.com/openai/v1/</code></strong> 를 쓰세요.
+<code>&lt;리소스이름&gt;</code> 은 Lab 01에서 정한 Foundry 리소스 이름입니다.</p>
+</details>
+<details class="failure">
+<summary>openai 버전이 2.46.0 이 아닙니다</summary>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--force-reinstall
+</code></pre></div>
+<p><code>requirements.txt</code> 에 <code>openai==2.46.0</code> 이 <strong><code>==</code> 로</strong> 적혀 있는지 확인하세요.
+버전이 다르면 <code>responses.create</code> 의 동작이 달라질 수 있습니다.</p>
+</details>
+<details class="failure">
+<summary>엔드포인트나 키가 None 이라고 나옵니다</summary>
+<p><strong><code>.env</code> 를 못 읽고 있습니다.</strong></p>
+<ol>
+<li><code>.env</code> 가 <code>verify.py</code> 와 <strong>같은 폴더</strong>에 있는지 확인</li>
+<li>파일 이름이 <code>.env.txt</code> 로 저장되지 않았는지 확인</li>
+<li>터미널의 현재 위치가 그 폴더인지 확인 (<code>cd ai901</code>)</li>
+<li><code>load_dotenv()</code> 가 <code>os.getenv()</code> <strong>보다 위에</strong> 있는지 확인</li>
+</ol>
+</details>
+<details class="failure">
+<summary>배포 화면에 TPM(할당량) 칸이 안 보입니다</summary>
+<p><strong>«기본 설정» 으로 들어간 것입니다.</strong> 거기서는 할당량을 바꿀 수 없습니다.</p>
+<ol>
+<li>취소하고 <strong>배포</strong> 를 다시 누르세요</li>
+<li><strong>«사용자 지정 설정»</strong> 을 고르세요</li>
+<li>이미 기본 설정으로 배포했다면 — 배포 목록에서 그 배포를 열어
+   <strong>편집</strong>으로 TPM 을 <code>10K</code> 로 낮추면 됩니다. 지우고 다시 만들지 않아도 됩니다</li>
+</ol>
+</details>
+<details class="failure">
+<summary>모델을 사용할 수 없다고 나옵니다</summary>
+<p>해당 리전에 그 모델이 없는 경우입니다.</p>
+<ul>
+<li>Lab 01에서 <strong><code>East US 2</code></strong> 로 만들었는지 확인하세요 (<code>East US</code> 아님)</li>
+<li>다른 리전으로 만들었다면 리소스를 다시 만들어야 할 수 있습니다. 손을 드세요</li>
+</ul>
+</details>
+<details class="failure">
+<summary>python 명령을 찾을 수 없습니다</summary>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Windows</label><label for="__tabbed_2_2">macOS</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><code>py -m venv .venv</code> 또는 <code>python3</code> 로 시도하세요.</p>
+</div>
+<div class="tabbed-block">
+<p><code>python3 -m venv .venv</code> 로 시도하세요.</p>
+</div>
+</div>
+</div>
+</details>
+<hr />
+<h2 id="_4">💡 오늘 만든 것</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ai901/
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>├── .venv/          ← 가상 환경 (건드리지 않습니다)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>├── .env            ← 엔드포인트 · 키 · 배포 이름
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>└── verify.py       ← 첫 호출
+</code></pre></div>
+<p><strong>이 폴더를 내일 그대로 씁니다.</strong> 지우지 마세요.</p>
+<p>내일은 이 <code>verify.py</code> 를 확장해서 프롬프트를 바꾸고, 매개변수를 붙이고, 응답을 파싱합니다.
+지금 쓴 세 줄짜리 코드가 4일 내내 계속 자랍니다.</p>
+<div class="admonition success">
+<p class="admonition-title">수고하셨습니다</p>
+<p>오늘 한 일 — 실습 환경을 확인하고, Foundry 리소스와 프로젝트를 만들고,
+모델을 배포하고, <strong>내 코드로 AI를 불러서 답을 받았습니다.</strong></p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.instant", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
