@@ -63,10 +63,16 @@ azure-ai-contentunderstanding==1.1.0
 
 ## 2. 영수증 이미지 (3분)
 
-영수증 사진을 하나 준비합니다.
+아래 영수증을 내려받아 쓰세요. **파일명은 `receipt.png` 그대로** 두시면 됩니다.
 
-- 지갑에 있는 실물 영수증을 찍어도 되고
-- 없으면 **메모장에 영수증처럼 적어서 스크린샷**을 찍어도 됩니다
+<figure markdown>
+  ![스킬잇 카페 영수증](../assets/receipt-photo.png){ width="300" }
+  <figcaption>receipt.png · 1086 × 1448 · 약 2.4MB · AI로 생성한 실습용 예시</figcaption>
+</figure>
+
+[↓ receipt.png 내려받기](../assets/receipt-photo.png){ .md-button .md-button--primary download="receipt.png" }
+
+담긴 내용은 이렇습니다. 3절에서 이 값들이 **필드로** 나오는지 확인하게 됩니다.
 
 ```text
 스킬잇 카페
